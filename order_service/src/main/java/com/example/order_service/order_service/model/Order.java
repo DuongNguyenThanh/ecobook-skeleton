@@ -2,11 +2,12 @@ package com.example.order_service.order_service.model;
 
 import java.util.List;
 
-import javax.persistence.ElementCollection;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "t_orders")
+@Table(name = "Orders")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -27,7 +28,6 @@ public class Order {
     private float sub_total;
     private String status;
     private String note;
-    @ElementCollection(targetClass = OrderItem.class)
+    @OneToMany(cascade = CascadeType.ALL)
     private List<OrderItem> listOrderItem;
-
 }
