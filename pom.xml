@@ -20,6 +20,8 @@
 
     <modules>
         <module>discovery-server</module>
+        <module>payment-service</module>
+        <module>book-service</module>
     </modules>
 
     <properties>
