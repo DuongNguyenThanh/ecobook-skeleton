@@ -23,5 +23,6 @@ public class OrderItem {
     private Integer id;
     private float price;
     private int quantity;
+    private int book_id;
     private String created_at;
 }
