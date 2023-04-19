@@ -9,39 +9,15 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
-    <artifactId>discovery-server</artifactId>
+    <artifactId>ecobook-config</artifactId>
     <version>1.0.0</version>
-    <name>discovery-server</name>
-    <description>discovery-server</description>
-
-    <properties>
-        <jersey-apache-client4.version>1.19.4</jersey-apache-client4.version>
-    </properties>
+    <name>ecobook-config</name>
+    <description>ecobook-config</description>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.jersey.contribs</groupId>
-            <artifactId>jersey-apache-client4</artifactId>
-            <version>${jersey-apache-client4.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-bootstrap</artifactId>
-            <version>${spring-cloud-bootstrap.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-cloud-config-server</artifactId>
         </dependency>
     </dependencies>
     <dependencyManagement>
