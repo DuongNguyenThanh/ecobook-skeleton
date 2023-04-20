@@ -7,8 +7,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,7 +16,7 @@ public class UserAccount extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(name = "username")
     private String username;

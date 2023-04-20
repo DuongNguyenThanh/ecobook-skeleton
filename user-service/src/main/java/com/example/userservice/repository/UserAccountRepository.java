@@ -7,17 +7,18 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface UserAccountRepository extends JpaRepository<UserAccount, Integer> {
+public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
 
-    UserAccount findByUsername(String username);
+    Optional<UserAccount> findByUsername(String username);
 
-    UserAccount findByPhoneNum(String phoneNum);
+    Optional<UserAccount> findByPhoneNum(String phoneNum);
 
     @Query(nativeQuery = true,
             value = "SELECT u.* " +
-                    "FROM user_accout u " +
+                    "FROM user_account u " +
                     "WHERE u.username IN :usernames " +
                     "   OR u.phone_number IN :phoneNums ")
     List<UserAccount> findAllByUsernameOrPhoneNum(Collection<String> usernames, Collection<String> phoneNums);

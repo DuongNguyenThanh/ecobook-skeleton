@@ -1,4 +1,4 @@
-package com.example.userservice.filter;
+package com.example.api.filter;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -22,36 +24,36 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+@Component
 @Slf4j
-public class CustomAuthorizationFilter extends OncePerRequestFilter {
+public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if(request.getServletPath().equals("/user/login") || request.getServletPath().equals("/user/token/refresh")) {
+
+        if(request.getServletPath().equals("/api/user/login") || request.getServletPath().equals("/api/user/token/refresh")) {
             filterChain.doFilter(request, response);
         } else {
-            String authorizationHeader = request.getHeader(AUTHORIZATION);
-            if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = request.getHeader(AUTHORIZATION);
+            if(StringUtils.hasText(token)) {
                 try {
-                    String token = authorizationHeader.substring("Bearer ".length());
                     Algorithm algorithm = Algorithm.HMAC256("secret".getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
                     String username = decodedJWT.getSubject();
                     List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    roles.forEach(role -> {
-                        authorities.add(new SimpleGrantedAuthority(role));
-                    });
+                    roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+
                     UsernamePasswordAuthenticationToken authenticationToken =
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
-                }catch (Exception exception) {
+                } catch (Exception exception) {
                     log.error("Error logging in: {}", exception.getMessage());
                     response.setHeader("error", exception.getMessage());
                     response.setStatus(FORBIDDEN.value());
-                    //response.sendError(FORBIDDEN.value());
+
                     Map<String, String> error = new HashMap<>();
                     error.put("error_message", exception.getMessage());
                     response.setContentType(APPLICATION_JSON_VALUE);

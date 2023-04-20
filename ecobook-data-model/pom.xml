@@ -20,6 +20,12 @@
 		<module>user-data-model</module>
 	</modules>
 
+	<properties>
+		<java.version>1.8</java.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<data.model.version>1.0.0</data.model.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

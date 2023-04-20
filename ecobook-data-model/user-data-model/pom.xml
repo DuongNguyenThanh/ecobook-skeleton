@@ -10,8 +10,7 @@
 	</parent>
 
 	<artifactId>user-data-model</artifactId>
-	<version>1.0.0</version>
-
+	<version>${data.model.version}</version>
 	<name>user-data-model</name>
 	<description>user-data-model</description>
 

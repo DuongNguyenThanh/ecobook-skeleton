@@ -1,5 +1,6 @@
 package com.example.userservice.controller;
 
+import com.example.userservice.payload.request.LoginRequest;
 import com.example.userservice.payload.request.RegisterRequest;
 import com.example.userservice.payload.request.ResetPasswordRequest;
 import com.example.userservice.payload.response.RegisterResponse;
@@ -13,10 +14,22 @@ import javax.validation.Valid;
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserAccountController {
 
     private final UserService userService;
+
+    @GetMapping("/hello")
+    ResponseEntity<String> helloWorld() {
+        return ResponseEntity.ok("Hello World");
+    }
+
+    @PostMapping("/sign-in")
+    ResponseEntity<?> signIn(
+            @RequestBody @Valid LoginRequest request
+    ) {
+        return ResponseEntity.ok(userService.login(request));
+    }
 
     @PostMapping("/register")
     ResponseEntity<RegisterResponse> addUser(
@@ -29,7 +42,7 @@ public class UserAccountController {
     ResponseEntity<String> resetPassword(
             @RequestBody @Valid ResetPasswordRequest request
     ) {
-
+        userService.resetPassword(request);
         return ResponseEntity.ok("Reset password completed");
     }
 }

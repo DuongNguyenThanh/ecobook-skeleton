@@ -21,41 +21,7 @@ import java.util.ArrayList;
 @SpringBootApplication
 public class UserServiceApplication {
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
-
-	@Autowired
-	private UserAccountRepository userRepository;
-
 	public static void main(String[] args) {
 		SpringApplication.run(UserServiceApplication.class, args);
 	}
-
-	@PostConstruct
-	public void addUser(){
-		ArrayList<UserAccount> userAccounts = new ArrayList<>();
-		try {
-			userAccounts.add(UserAccount.builder()
-					.username("admin")
-					.password(passwordEncoder.encode("admin"))
-					.role(AccountRoleEnum.ADMIN)
-					.fName("admin")
-					.build());
-
-			userAccounts.add(UserAccount.builder()
-					.username("duongnt")
-					.password(passwordEncoder.encode("duong@123"))
-					.role(AccountRoleEnum.USER)
-					.fName("Duong")
-					.lName("Nguyen Thanh")
-					.address("VietNam")
-					.phoneNum("0123456789")
-					.build());
-
-			userRepository.saveAll(userAccounts);
-		}catch(Exception exception) {
-
-		}
-	}
-
 }
