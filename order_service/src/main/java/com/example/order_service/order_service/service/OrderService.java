@@ -21,13 +21,27 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
 
+    public void cancelOrder(Integer id) {
+        // call cartService to add listOrderItem to cart
+        // delete order
+        orderRepository.deleteById(id);
+    }
+
+    public void deleteOrder(Integer id) {
+        if(orderRepository.existsById(id)) {
+            orderRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Order not found");
+        }
+    }
+
     public void placeOrder(OrderRequest orderRequest) throws NullPointerException {
         Order order = setOrderDetail(orderRequest);
 
-        List<Integer> book_ids =  order.getListOrderItem()
-            .stream()
-            .map(OrderItem::getBook_id)
-            .toList();
+        // List<Integer> book_ids =  order.getListOrderItem()
+        //     .stream()
+        //     .map(OrderItem::getBook_id)
+        //     .toList();
 
         // call cart service and place order if is in
         // CartRespond[] cartRespondsArray =  webClientBuilder.build().get()
