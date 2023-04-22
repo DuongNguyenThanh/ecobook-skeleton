@@ -19,6 +19,8 @@
     <description>ecobook-skeleton</description>
 
     <modules>
+        <module>ecobook-common-library</module>
+        <module>ecobook-data-model</module>
         <module>ecobook-config</module>
         <module>discovery-server</module>
         <module>user-service</module>
