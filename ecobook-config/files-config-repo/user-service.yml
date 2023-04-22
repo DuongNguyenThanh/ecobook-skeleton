@@ -32,5 +32,5 @@ eureka:
 ecobook:
   app:
     jwtSecret: ecoBokSecretKey
-    jwtExpirationMs: 3600000
-    jwtRefreshExpirationMs: 86400000
+    jwtExpirationMs: 600000
+    jwtRefreshExpirationMs: 3600000

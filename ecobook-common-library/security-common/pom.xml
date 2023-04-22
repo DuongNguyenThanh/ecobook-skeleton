@@ -16,6 +16,7 @@
 
     <properties>
         <jjwt.version>0.9.1</jjwt.version>
+        <java.jwt.version>4.4.0</java.jwt.version>
     </properties>
 
     <dependencies>
@@ -28,6 +29,11 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>${java.jwt.version}</version>
         </dependency>
     </dependencies>
 

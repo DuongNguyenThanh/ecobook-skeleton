@@ -1,5 +1,6 @@
 package com.example.userservice.controller;
 
+import com.example.api.controller.BaseController;
 import com.example.userservice.payload.request.LoginRequest;
 import com.example.userservice.payload.request.RegisterRequest;
 import com.example.userservice.payload.request.ResetPasswordRequest;
@@ -9,19 +10,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
-public class UserAccountController {
+public class UserAccountController extends BaseController {
 
     private final UserService userService;
 
     @GetMapping("/hello")
-    ResponseEntity<String> helloWorld() {
-        return ResponseEntity.ok("Hello World");
+    ResponseEntity<?> helloWorld() {
+
+        String username = getPrincipal();
+        return ResponseEntity.ok(userService.hello(username));
     }
 
     @PostMapping("/sign-in")
@@ -44,5 +50,11 @@ public class UserAccountController {
     ) {
         userService.resetPassword(request);
         return ResponseEntity.ok("Reset password completed");
+    }
+
+    @GetMapping("/token/refresh")
+    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
+
     }
 }

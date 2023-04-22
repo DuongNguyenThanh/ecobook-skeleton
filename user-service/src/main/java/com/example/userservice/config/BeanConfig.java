@@ -1,6 +1,7 @@
 package com.example.userservice.config;
 
 import com.example.api.filter.AuthTokenFilter;
+import com.example.api.jwt.AuthEntryPointJwt;
 import com.example.security.common.JwtTokenCommon;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,5 +24,10 @@ public class BeanConfig {
     @Bean
     JwtTokenCommon jwtTokenCommon() {
         return new JwtTokenCommon();
+    }
+
+    @Bean
+    AuthEntryPointJwt authEntryPointJwt() {
+        return new AuthEntryPointJwt();
     }
 }
