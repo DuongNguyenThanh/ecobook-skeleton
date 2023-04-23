@@ -2,6 +2,7 @@ package com.example.order_service.order_service.service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import com.example.order_service.order_service.dto.CartRespond;
 import com.example.order_service.order_service.dto.OrderItemDto;
@@ -20,6 +21,12 @@ import lombok.RequiredArgsConstructor;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
+
+    public void updateOrderStatus(String status, Integer id) {
+        Order order = orderRepository.findById(id).get();
+        order.setStatus(status);
+        orderRepository.save(order);
+    }
 
     public Order getOrder(Integer id) {
         return orderRepository.findById(id).get();
@@ -78,6 +85,7 @@ public class OrderService {
         order.setListOrderItem(orderItems);
         // set user_id for order
         // set note
+        order.setNote(orderRequest.getNote());
         // set status
         order.setStatus("Watting for payment");
         // set sub_total

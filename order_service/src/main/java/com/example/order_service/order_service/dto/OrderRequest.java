@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderRequest {
+    private String note;
     private List<OrderItemDto> listOrderItemDto;
 }

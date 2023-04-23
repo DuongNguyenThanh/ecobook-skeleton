@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
@@ -44,13 +45,19 @@ public class OrderController {
         return "Order have been canceled";
     }
 
-    @PostMapping("/get/{orderId}")
-    public ResponseEntity<Order> getOrder(@PathVariable Integer orderId) {
-        return ResponseEntity.ok(orderService.getOrder(orderId));
+    @PostMapping("/get/{order_id}")
+    public ResponseEntity<Order> getOrder(@PathVariable Integer order_id) {
+        return ResponseEntity.ok(orderService.getOrder(order_id));
     }
 
     @PostMapping("/getOrderOfCustomer/{customer_id}")
     public ResponseEntity<List<Order>> getAlllOrder(@PathVariable Integer customer_id) {
         return ResponseEntity.ok(orderService.getAllOrder(customer_id));
+    }
+
+    @PostMapping("/updateStatus/{orderId}")
+    public String updateOrderStatus(@RequestParam("status") String status, @PathVariable Integer orderId) {
+        orderService.updateOrderStatus(status, orderId);
+        return "Order have been updated";
     }
 }
