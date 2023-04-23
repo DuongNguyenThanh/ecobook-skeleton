@@ -24,6 +24,8 @@
         <module>ecobook-config</module>
         <module>discovery-server</module>
         <module>user-service</module>
+        <module>payment-service</module>
+        <module>book-service</module>
     </modules>
 
     <properties>
