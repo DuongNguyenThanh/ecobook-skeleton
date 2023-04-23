@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.10</version>
+        <version>2.2.2.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -19,14 +19,19 @@
     <description>ecobook-skeleton</description>
 
     <modules>
+        <module>ecobook-common-library</module>
+        <module>ecobook-data-model</module>
+        <module>ecobook-config</module>
         <module>discovery-server</module>
+        <module>user-service</module>
         <module>payment-service</module>
         <module>book-service</module>
     </modules>
 
     <properties>
         <java.version>1.8</java.version>
-        <spring-cloud.version>2021.0.6</spring-cloud.version>
+        <spring-cloud.version>Hoxton.SR1</spring-cloud.version>
+        <spring-cloud-bootstrap.version>4.0.2</spring-cloud-bootstrap.version>
     </properties>
 
     <dependencies>
