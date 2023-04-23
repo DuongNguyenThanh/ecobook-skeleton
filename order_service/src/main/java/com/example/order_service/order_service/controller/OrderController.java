@@ -1,6 +1,9 @@
 package com.example.order_service.order_service.controller;
 
+import java.util.List;
+
 import com.example.order_service.order_service.dto.OrderRequest;
+import com.example.order_service.order_service.model.Order;
 import com.example.order_service.order_service.service.OrderService;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import lombok.RequiredArgsConstructor;
 
@@ -36,7 +40,17 @@ public class OrderController {
 
     @GetMapping("/cancel/{orderId}")
     public String cancelOrder(@PathVariable Integer orderId) {
+        orderService.cancelOrder(orderId);
         return "Order have been canceled";
     }
 
+    @PostMapping("/get/{orderId}")
+    public ResponseEntity<Order> getOrder(@PathVariable Integer orderId) {
+        return ResponseEntity.ok(orderService.getOrder(orderId));
+    }
+
+    @PostMapping("/getOrderOfCustomer/{customer_id}")
+    public ResponseEntity<List<Order>> getAlllOrder(@PathVariable Integer customer_id) {
+        return ResponseEntity.ok(orderService.getAllOrder(customer_id));
+    }
 }

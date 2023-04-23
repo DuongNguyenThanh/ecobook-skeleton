@@ -21,8 +21,16 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final WebClient.Builder webClientBuilder;
 
+    public Order getOrder(Integer id) {
+        return orderRepository.findById(id).get();
+    }
+
+    public List<Order> getAllOrder(Integer customerId) {
+        return orderRepository.findByCustomer_id(customerId);
+    }
+
     public void cancelOrder(Integer id) {
-        // call cartService to add listOrderItem to cart
+        // call cartService to re-add listOrderItem to cart
         // delete order
         orderRepository.deleteById(id);
     }
