@@ -25,7 +25,8 @@
         <module>discovery-server</module>
         <module>user-service</module>
         <module>payment-service</module>
-        <module>book-service</module>
+        <module>ebook-service</module>
+        <module>comment-service</module>
     </modules>
 
     <properties>

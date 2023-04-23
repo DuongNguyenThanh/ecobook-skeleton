@@ -18,6 +18,7 @@
 
 	<modules>
 		<module>user-data-model</module>
+		<module>ebook-data-model</module>
 	</modules>
 
 	<properties>
