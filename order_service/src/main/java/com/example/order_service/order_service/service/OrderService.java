@@ -32,8 +32,12 @@ public class OrderService {
         return orderRepository.findById(id).get();
     }
 
-    public List<Order> getAllOrder(Integer customerId) {
+    public List<Order> getOrderByCoustomer(Integer customerId) {
         return orderRepository.findByCustomer_id(customerId);
+    }
+
+    public List<Order> getAllOrder() {
+        return orderRepository.findAll();
     }
 
     public void cancelOrder(Integer id) {

@@ -51,13 +51,18 @@ public class OrderController {
     }
 
     @PostMapping("/getOrderOfCustomer/{customer_id}")
-    public ResponseEntity<List<Order>> getAlllOrder(@PathVariable Integer customer_id) {
-        return ResponseEntity.ok(orderService.getAllOrder(customer_id));
+    public ResponseEntity<List<Order>> getOrderByCustomer(@PathVariable Integer customer_id) {
+        return ResponseEntity.ok(orderService.getOrderByCoustomer(customer_id));
     }
 
     @PostMapping("/updateStatus/{orderId}")
     public String updateOrderStatus(@RequestParam("status") String status, @PathVariable Integer orderId) {
         orderService.updateOrderStatus(status, orderId);
         return "Order have been updated";
+    }
+
+    @GetMapping("getAllOrder")
+    public ResponseEntity<List<Order>> getAllOrder() {
+        return ResponseEntity.ok(orderService.getAllOrder());
     }
 }
