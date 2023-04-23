@@ -1,5 +1,7 @@
 package com.example.bookservice.model;
 
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,5 +18,6 @@ public class Image {
     private String img;
     @ManyToOne
     @JoinColumn(name = "book_id")
+    @JsonBackReference
     private Book book;
 }
