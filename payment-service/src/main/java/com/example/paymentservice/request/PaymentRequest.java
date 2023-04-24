@@ -1,15 +1,29 @@
 package com.example.paymentservice.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class PaymentRequest {
     private String token;
-    private Integer userId;
+
+    @JsonProperty("user_id")
+    private Long userId;
+
+    @JsonProperty("first_name")
     private String firstName;
+
+    @JsonProperty("last_name")
     private String lastName;
     private String gender;
     private String role;
     private String address;
+
+    @JsonProperty("phone_number")
     private String phoneNumber;
+
+    @JsonProperty("order_id")
     private Integer orderId;
+
+    @JsonProperty("sub_total")
     private Double subTotal;
     private String status;
     private String note;
@@ -22,11 +36,11 @@ public class PaymentRequest {
         this.token = token;
     }
 
-    public Integer getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(Integer userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 

@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public interface UserService {
 
-    ResponseEntity<?> hello(String username);
+    ResponseEntity<?> hello(String username, Long userId);
 
     ResponseEntity<?> login(LoginRequest request);
 

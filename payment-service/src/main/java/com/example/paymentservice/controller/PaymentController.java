@@ -1,12 +1,12 @@
 package com.example.paymentservice.controller;
 
 
-import com.example.paymentservice.paypalconfig.config.PaypalPaymentIntent;
-import com.example.paymentservice.paypalconfig.config.PaypalPaymentMethod;
-import com.example.paymentservice.data.PaymentRepository;
-import com.example.paymentservice.model.PaymentInfo;
-import com.example.paymentservice.paypalconfig.service.PaypalService;
-import com.example.paymentservice.paypalconfig.utils.Utils;
+import com.example.paymentdatamodel.entity.PaymentInfo;
+import com.example.paymentservice.config.paypal.config.PaypalPaymentIntent;
+import com.example.paymentservice.config.paypal.config.PaypalPaymentMethod;
+import com.example.paymentservice.repository.PaymentRepository;
+import com.example.paymentservice.config.paypal.service.PaypalService;
+import com.example.paymentservice.config.paypal.utils.Utils;
 import com.example.paymentservice.request.PaymentRequest;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
@@ -85,7 +85,7 @@ public class PaymentController {
     }
     @GetMapping(URL_PAYPAL_SUCCESS)
     public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId,
-                             @RequestParam("userId") Integer userId,@RequestParam("orderId") Integer orderId){
+                             @RequestParam("userId") Long userId,@RequestParam("orderId") Integer orderId){
         try {
             //if user order token jj do
             Payment payment = paypalService.executePayment(paymentId, payerId);

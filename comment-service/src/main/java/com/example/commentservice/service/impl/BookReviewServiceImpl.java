@@ -1,7 +1,7 @@
 package com.example.commentservice.service.impl;
 
-import com.example.commentservice.data.BookReviewRepository;
-import com.example.commentservice.model.BookReview;
+import com.example.commentdatamodel.entity.BookReview;
+import com.example.commentservice.repository.BookReviewRepository;
 import com.example.commentservice.request.AddReviewRequest;
 import com.example.commentservice.service.BookReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,16 +25,15 @@ public class BookReviewServiceImpl implements BookReviewService {
 
     @Override
     public Iterable<BookReview> getByBookId(Integer bookId) {
-        return bookReviewRepository.getAllByBookId(bookId);
+        return bookReviewRepository.getAllByProductId(bookId);
     }
 
     @Override
-    public BookReview addReview(AddReviewRequest reviewRequest) {
+    public BookReview addReview(Long userId, AddReviewRequest reviewRequest) {
         return bookReviewRepository.save( BookReview.builder()
                         .context(reviewRequest.getContext())
-                        .createdAt(reviewRequest.getCreatedAt())
                         .productId(reviewRequest.getProductId())
-                        .userId(reviewRequest.getUserId())
+                        .userId(userId)
                 .build());
     }
 

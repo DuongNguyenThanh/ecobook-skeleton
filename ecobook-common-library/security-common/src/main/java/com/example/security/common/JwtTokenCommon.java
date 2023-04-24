@@ -29,7 +29,7 @@ public class JwtTokenCommon {
     }
 
     public String generateJwtToken(UserPrincipal userPrincipal) {
-        return generateTokenFromUsername(userPrincipal.getUsername(), userPrincipal.getAuthorities());
+        return generateTokenFromUsername(userPrincipal.getUsername(), userPrincipal.getId(), userPrincipal.getAuthorities());
     }
 
     public String generateJwtRefreshToken(UserPrincipal userPrincipal) {
@@ -40,12 +40,13 @@ public class JwtTokenCommon {
         return Algorithm.HMAC256(jwtSecret.getBytes());
     }
 
-    public String generateTokenFromUsername(String username, Collection<? extends GrantedAuthority> authorities) {
+    public String generateTokenFromUsername(String username, Long userId, Collection<? extends GrantedAuthority> authorities) {
         return JWT.create()
                 .withSubject(username)
                 .withExpiresAt(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .withIssuedAt(new Date())
                 .withClaim("roles", authorities.stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                .withClaim("user_id", userId)
                 .sign(algorithm());
     }
 

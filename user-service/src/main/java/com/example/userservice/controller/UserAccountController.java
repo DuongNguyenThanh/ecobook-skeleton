@@ -27,7 +27,9 @@ public class UserAccountController extends BaseController {
     ResponseEntity<?> helloWorld() {
 
         String username = getPrincipal();
-        return ResponseEntity.ok(userService.hello(username));
+        Long userId = getOriginalId();
+
+        return ResponseEntity.ok(userService.hello(username, userId));
     }
 
     @PostMapping("/sign-in")

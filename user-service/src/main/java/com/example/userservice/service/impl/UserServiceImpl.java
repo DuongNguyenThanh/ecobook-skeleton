@@ -56,9 +56,9 @@ public class UserServiceImpl implements UserService {
     private int jwtExpirationMs;
 
     @Override
-    public ResponseEntity<?> hello(String username) {
+    public ResponseEntity<?> hello(String username, Long userId) {
 
-        return ResponseEntity.ok("Hello " + username);
+        return ResponseEntity.ok("Hello " + username + " with id = " + userId);
     }
 
     @Override

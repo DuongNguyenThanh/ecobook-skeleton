@@ -4,10 +4,10 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.security.model.EcobookUserPassAuthentiactionToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -44,13 +44,16 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                     Algorithm algorithm = Algorithm.HMAC256(jwtSecret.getBytes());
                     JWTVerifier verifier = JWT.require(algorithm).build();
                     DecodedJWT decodedJWT = verifier.verify(token);
+
                     String username = decodedJWT.getSubject();
+                    Long userId = decodedJWT.getClaim("user_id").asLong();
                     List<String> roles = decodedJWT.getClaim("roles").asList(String.class);
+
                     Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
                     roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
 
-                    UsernamePasswordAuthenticationToken authenticationToken =
-                            new UsernamePasswordAuthenticationToken(username, null, authorities);
+                    EcobookUserPassAuthentiactionToken authenticationToken =
+                            new EcobookUserPassAuthentiactionToken(userId, username, null, authorities);
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                     filterChain.doFilter(request, response);
                 } catch (Exception exception) {

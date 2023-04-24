@@ -19,6 +19,8 @@
 	<modules>
 		<module>user-data-model</module>
 		<module>ebook-data-model</module>
+		<module>comment-data-model</module>
+		<module>payment-data-model</module>
 	</modules>
 
 	<properties>
