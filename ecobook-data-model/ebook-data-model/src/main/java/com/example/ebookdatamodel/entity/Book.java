@@ -1,5 +1,7 @@
 package com.example.ebookdatamodel.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -41,10 +43,12 @@ public class Book extends BaseModel {
     @Column(name = "quantity")
     private Integer quantity;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Image> images;
 }

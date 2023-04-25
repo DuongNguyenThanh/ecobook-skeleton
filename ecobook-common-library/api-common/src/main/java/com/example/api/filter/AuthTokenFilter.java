@@ -29,7 +29,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
 
-    @Value("${ecobook.app.jwtSecret}")
+    @Value("ecoBokSecretKey")
     private String jwtSecret;
 
     @Override

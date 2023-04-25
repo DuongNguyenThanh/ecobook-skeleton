@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @RestController
 @Slf4j
-@RequestMapping(path = "api/v1/image")
+@RequestMapping(path = "/api/image")
 public class ImageController {
     @Autowired
     private EntityLinks entityLinks;

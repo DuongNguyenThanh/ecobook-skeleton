@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Slf4j
 @RestController
-@RequestMapping(path = "/api/v1/category", produces = "application/json")
+@RequestMapping(path = "/api/category", produces = "application/json")
 public class CategoryController {
     @Autowired
     private EntityLinks entityLinks;
