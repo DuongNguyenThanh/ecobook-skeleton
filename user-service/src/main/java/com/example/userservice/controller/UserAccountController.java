@@ -36,7 +36,7 @@ public class UserAccountController extends BaseController {
     ResponseEntity<?> signIn(
             @RequestBody @Valid LoginRequest request
     ) {
-        return ResponseEntity.ok(userService.login(request));
+        return userService.login(request);
     }
 
     @PostMapping("/register")

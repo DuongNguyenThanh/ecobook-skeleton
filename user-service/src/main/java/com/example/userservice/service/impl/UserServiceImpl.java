@@ -64,12 +64,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<?> login(LoginRequest request) {
 
+        UserAccount existUsername = userAccountRepo.findByUsername(request.getUsername()).orElseThrow(
+                () -> new NotFoundException(
+                        String.format("login error: Not found User Account with username: %s", request.getUsername())
+                )
+        );
+
         // Authenticate via authentication manager
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
         );
 
-        if (Objects.nonNull(authentication)) {
+        if (Objects.nonNull(existUsername) && Objects.nonNull(authentication)) {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             UserPrincipal userDetails = (UserPrincipal) authentication.getPrincipal();
 
@@ -81,8 +87,7 @@ public class UserServiceImpl implements UserService {
 
 //            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
 
-            return ResponseEntity.ok(
-                    UserToken.builder()
+            return ResponseEntity.ok(UserToken.builder()
                             .accountId(userDetails.getId())
                             .accessToken(accessToken)
                             .refreshToken(refreshToken)
@@ -125,7 +130,9 @@ public class UserServiceImpl implements UserService {
                             response.setExistPhoneNumber(1);
                         } else if (u.getUsername().equals(request.getUsername())) {
                             response.setExistUsername(1);
+                            response.setExistPhoneNumber(0);
                         } else if (u.getPhoneNum().equals(request.getPhoneNum())) {
+                            response.setExistUsername(0);
                             response.setExistPhoneNumber(1);
                         }
                     }
