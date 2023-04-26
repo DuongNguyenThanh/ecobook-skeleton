@@ -1,4 +1,4 @@
-package com.example.cartservice.data;
+package com.example.cartservice.repository;
 
 import com.example.cartservice.model.Cart;
 import org.springframework.data.jpa.repository.JpaRepository;

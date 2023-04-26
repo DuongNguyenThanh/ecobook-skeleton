@@ -1,4 +1,4 @@
-package com.example.cartservice.request;
+package com.example.cartservice.payload.request;
 
 import com.example.cartservice.model.Cart;
 import lombok.AllArgsConstructor;

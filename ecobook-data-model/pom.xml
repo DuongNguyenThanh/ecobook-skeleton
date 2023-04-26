@@ -22,6 +22,7 @@
 		<module>comment-data-model</module>
 		<module>payment-data-model</module>
 		<module>order-data-model</module>
+		<module>cart-data-model</module>
 	</modules>
 
 	<properties>

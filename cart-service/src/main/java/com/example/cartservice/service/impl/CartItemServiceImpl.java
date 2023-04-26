@@ -1,9 +1,9 @@
 package com.example.cartservice.service.impl;
 
-import com.example.cartservice.data.CartItemRepository;
+import com.example.cartservice.repository.CartItemRepository;
 import com.example.cartservice.model.CartItem;
-import com.example.cartservice.request.AddCartItemRequest;
-import com.example.cartservice.request.UpdateCartItemRequest;
+import com.example.cartservice.payload.request.AddCartItemRequest;
+import com.example.cartservice.payload.request.UpdateCartItemRequest;
 import com.example.cartservice.service.CartItemService;
 import org.springframework.stereotype.Service;
 

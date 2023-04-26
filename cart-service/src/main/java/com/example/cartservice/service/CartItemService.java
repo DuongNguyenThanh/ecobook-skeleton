@@ -1,8 +1,8 @@
 package com.example.cartservice.service;
 
 import com.example.cartservice.model.CartItem;
-import com.example.cartservice.request.AddCartItemRequest;
-import com.example.cartservice.request.UpdateCartItemRequest;
+import com.example.cartservice.payload.request.AddCartItemRequest;
+import com.example.cartservice.payload.request.UpdateCartItemRequest;
 
 public interface CartItemService {
     Iterable<CartItem> getAll();
