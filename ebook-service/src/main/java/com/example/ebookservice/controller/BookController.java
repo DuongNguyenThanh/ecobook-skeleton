@@ -10,9 +10,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.hateoas.server.EntityLinks;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -25,23 +27,38 @@ public class BookController {
     private final BookRepository bookRepo;
     private final CategoryRepository categoryRepo;
 
-    @GetMapping("/")
+    @GetMapping("/all-book")
     public Iterable<Book> getAll(){
         return bookRepo.findAll();
     }
 
     @GetMapping("/{bookId}")
-    public Book getDetail(@PathVariable Integer bookId){
+    public ResponseEntity<Book> getDetail(@PathVariable Integer bookId){
         Optional<Book> book = bookRepo.findById(bookId);
         if(book.isPresent()){
-            return book.get();
+            return ResponseEntity.ok(book.get());
+        }
+        return null;
+    }
+
+    @GetMapping("/book-cate")
+    public ResponseEntity<List<Book>> getBookByCategory(
+            @RequestParam(name = "cate-id") Integer cateId
+    ) {
+        List<Book> books = bookRepo.findAllByCategoryId(cateId);
+        if(!books.isEmpty()){
+            return ResponseEntity.ok(books);
         }
         return null;
     }
 
     //search book theo ten
     @GetMapping("/search")
-    public Iterable<Book> searchBookByName(@RequestParam String key,@RequestParam Float from, @RequestParam Float to){
+    public ResponseEntity<Iterable<Book>> searchBookByName(
+            @RequestParam String key,
+            @RequestParam Float from,
+            @RequestParam Float to
+    ) {
 //        if(from.isNaN() && to.isNaN()) {
 //            return null;
 //        }
@@ -52,14 +69,14 @@ public class BookController {
                 rs.add(b);
             }
         }
-        return rs;
+        return ResponseEntity.ok(rs);
     }
     @PostMapping(consumes = "application/json")
-    public Book addBook(@RequestBody BookAddRequest bookAddRequest){
+    public ResponseEntity<Book> addBook(@RequestBody BookAddRequest bookAddRequest){
 
         Category category = categoryRepo.getOne(bookAddRequest.getCategory().getId());
 
-        return bookRepo.save(Book.builder()
+        return ResponseEntity.ok(bookRepo.save(Book.builder()
                         .name(bookAddRequest.getName())
                         .author(bookAddRequest.getAuthor())
                         .price(bookAddRequest.getPrice())
@@ -69,12 +86,12 @@ public class BookController {
                         .publisher(bookAddRequest.getPublisher())
                         .quantity(bookAddRequest.getQuantity())
                         .description(bookAddRequest.getDescription())
-                .build());
+                .build()));
     }
 
     @PutMapping("/{bookId}")
-    public Book updateBook(@RequestBody Book book){
-        return bookRepo.save(book);
+    public ResponseEntity<Book> updateBook(@RequestBody Book book){
+        return ResponseEntity.ok(bookRepo.save(book));
     }
     @DeleteMapping("/{bookId}")
     public String deleteBook(@PathVariable Integer bookId){

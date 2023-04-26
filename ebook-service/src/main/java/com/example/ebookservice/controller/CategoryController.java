@@ -1,57 +1,50 @@
 package com.example.ebookservice.controller;
 
-import com.example.ebookdatamodel.entity.Category;
-import com.example.ebookservice.repository.CategoryRepository;
-import com.example.ebookservice.payload.request.CategoryAddRequest;
+import com.example.ebookservice.payload.response.CategoryResponse;
+import com.example.ebookservice.payload.request.CategoryRequest;
+import com.example.ebookservice.service.CategoryService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping(path = "/api/category", produces = "application/json")
 public class CategoryController {
-    @Autowired
-    private EntityLinks entityLinks;
-    private CategoryRepository categoryRepository;
 
-    public CategoryController(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
+    private final CategoryService categoryService;
+
     @GetMapping("/")
-    public Iterable<Category> getAll(){
-        return categoryRepository.findAll();
+    public ResponseEntity<List<CategoryResponse>> getAll() {
+
+        return ResponseEntity.ok(categoryService.getAll());
     }
+
     @GetMapping("/{cateId}")
-    public Category getDetail(@PathVariable Integer cateId){
-        return categoryRepository.findById(cateId).get();
+    public ResponseEntity<CategoryResponse> getDetail(
+            @PathVariable Integer cateId
+    ) {
+        return ResponseEntity.ok(categoryService.findById(cateId));
     }
+
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public Category addCate(@RequestBody CategoryAddRequest categoryAddRequest){
-        Optional<Category> cs = categoryRepository.findByName(categoryAddRequest.getName());
-        if(!cs.isPresent()){
-            Category c = new Category();
-            c.setName(categoryAddRequest.getName());
-            c.setDescription(categoryAddRequest.getDescription());
-            return categoryRepository.save(c);
-        }
-        return null;
+    public ResponseEntity<CategoryResponse> addCategory(
+            @RequestBody CategoryRequest request
+    ) {
+
+        return ResponseEntity.ok(categoryService.addCategory(request));
     }
+
     @PutMapping("/{cateId}")
-    public Category putCate(@RequestBody Category category){
-        return  categoryRepository.save(category);
+    public ResponseEntity<CategoryResponse> updateCategory(
+            @RequestBody CategoryRequest request
+    ) {
+        return ResponseEntity.ok(categoryService.updateCategory(request));
     }
-//    @DeleteMapping("/{cateId}")
-//    public void deleteCategory(@PathVariable Integer cateId){
-//        try{
-//            categoryRepository.deleteById(cateId);
-//        }catch (EmptyResultDataAccessException e){
-//            log.info("error");
-//        }
-//    }
 }
