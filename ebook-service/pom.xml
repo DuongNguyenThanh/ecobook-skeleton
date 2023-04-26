@@ -16,6 +16,7 @@
 
 	<properties>
 		<data.model.version>1.0.0</data.model.version>
+		<common.lib.version>1.0.0</common.lib.version>
 	</properties>
 
 	<dependencies>
@@ -62,6 +63,12 @@
 			<groupId>com.example</groupId>
 			<artifactId>ebook-data-model</artifactId>
 			<version>${data.model.version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.example</groupId>
+			<artifactId>api-common</artifactId>
+			<version>${common.lib.version}</version>
 			<scope>compile</scope>
 		</dependency>
 	</dependencies>

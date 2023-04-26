@@ -1,5 +1,6 @@
 package com.example.ebookdatamodel.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ public class Image extends BaseModel {
     @Column(name = "img")
     private String img;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;

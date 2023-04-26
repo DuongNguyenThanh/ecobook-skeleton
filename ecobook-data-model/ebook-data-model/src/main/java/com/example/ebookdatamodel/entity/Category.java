@@ -1,5 +1,6 @@
 package com.example.ebookdatamodel.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class Category extends BaseModel {
     @Column(name = "description")
     private String description;
 
+    @JsonManagedReference
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Book> bookList;
 }

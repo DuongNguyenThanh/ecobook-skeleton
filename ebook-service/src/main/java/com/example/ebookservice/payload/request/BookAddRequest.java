@@ -3,9 +3,12 @@ package com.example.ebookservice.payload.request;
 import com.example.ebookdatamodel.entity.Category;
 import com.example.ebookdatamodel.entity.Image;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
+@Getter @Setter
 public class BookAddRequest {
 
     @JsonProperty("name")
