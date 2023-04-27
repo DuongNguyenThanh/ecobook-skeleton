@@ -40,9 +40,11 @@ public class ImageController {
         String imgdir ="D:/image/anya.png";
         Optional<Image> image = imageRepository.findById(imageId);
         if (image.isPresent()){
-            imgdir = imgdir.substring(0,9)+image.get().getImg();
-            if(image.get().getImg().split("\\.")[1].equals("jpg")){
-                jpgCheck = true;
+            if(image.get().getImg().matches("^[^\\.]*\\.[^\\.]*$")){
+                imgdir = imgdir.substring(0,9)+image.get().getImg();
+                if(image.get().getImg().split("\\.")[1].equals("jpg")){
+                    jpgCheck = true;
+                }
             }
         }
 

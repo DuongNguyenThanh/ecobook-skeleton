@@ -11,7 +11,8 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
     Iterable<Book> findByNameContaining(String keyword);
-    @Query(value = "SELECT b FROM book b WHERE b.price >= :fromPrice AND b.price <= :toPrice", nativeQuery = true)
+    @Query( nativeQuery = true,
+            value = "SELECT b FROM book b WHERE b.price >= :fromPrice AND b.price <= :toPrice")
     Iterable<Book> findByPriceRange(@Param("fromPrice") Float fromPrice, @Param("toPrice") Float toPrice);
 
     @Query(nativeQuery = true,

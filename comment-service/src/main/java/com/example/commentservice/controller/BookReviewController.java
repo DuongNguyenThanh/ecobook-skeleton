@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "api/v1/book-review", produces = "application/json")
+@RequestMapping(path = "api/book-review", produces = "application/json")
 public class BookReviewController extends BaseController {
 
     private BookReviewService bookReviewService;
