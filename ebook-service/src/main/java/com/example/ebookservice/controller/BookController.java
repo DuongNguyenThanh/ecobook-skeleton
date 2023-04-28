@@ -1,21 +1,14 @@
 package com.example.ebookservice.controller;
 
-import com.example.ebookdatamodel.entity.Book;
-import com.example.ebookdatamodel.entity.Category;
-import com.example.ebookservice.repository.BookRepository;
-import com.example.ebookservice.payload.request.BookAddRequest;
-import com.example.ebookservice.repository.CategoryRepository;
+import com.example.ebookservice.payload.request.BookRequest;
+import com.example.ebookservice.payload.response.BookResponse;
+import com.example.ebookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.hateoas.server.EntityLinks;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -23,83 +16,62 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class BookController {
 
-    private final BookRepository bookRepo;
-    private final CategoryRepository categoryRepo;
+    private final BookService bookService;
 
     @GetMapping("/all-book")
-    public Iterable<Book> getAll(){
-        return bookRepo.findAll();
+    public ResponseEntity<List<BookResponse>> getAll(){
+
+        return ResponseEntity.ok(bookService.getAllBooks());
     }
 
     @GetMapping("/{bookId}")
-    public ResponseEntity<Book> getBook(@PathVariable Integer bookId){
-        Optional<Book> book = bookRepo.findById(bookId);
-        if(book.isPresent()){
-            return ResponseEntity.ok(book.get());
-        }
-        return null;
+    public ResponseEntity<BookResponse> getBook(
+            @PathVariable Integer bookId
+    ) {
+
+        return ResponseEntity.ok(bookService.getBookById(bookId));
     }
 
     @GetMapping("/book-cate")
-    public ResponseEntity<List<Book>> getBookByCategory(
+    public ResponseEntity<List<BookResponse>> getBooksByCategory(
             @RequestParam(name = "cate-id") Integer cateId
     ) {
-        List<Book> books = bookRepo.findAllByCategoryId(cateId);
-        if(!books.isEmpty()){
-            return ResponseEntity.ok(books);
-        }
-        return null;
+
+        return ResponseEntity.ok(bookService.getBooksByCategory(cateId));
     }
 
     //search book theo ten
     @GetMapping("/search")
-    public ResponseEntity<Iterable<Book>> searchBookByName(
+    public ResponseEntity<List<BookResponse>> searchBookByName(
             @RequestParam String key,
             @RequestParam Float from,
             @RequestParam Float to
     ) {
-//        if(from.isNaN() && to.isNaN()) {
-//            return null;
-//        }
-        ArrayList<Book> rs = new ArrayList<>();
-        Iterable<Book> books = bookRepo.findByNameContaining(key);
-        for (Book b:books) {
-            if(b.getPrice()<=to && b.getPrice() >= from){
-                rs.add(b);
-            }
-        }
-        return ResponseEntity.ok(rs);
+
+        return ResponseEntity.ok(bookService.searchBook(key, from, to));
     }
+
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<Book> addBook(@RequestBody BookAddRequest bookAddRequest){
+    public ResponseEntity<BookResponse> addBook(
+            @RequestBody BookRequest bookRequest
+    ) {
 
-        Category category = categoryRepo.getOne(bookAddRequest.getCategory().getId());
-
-        return ResponseEntity.ok(bookRepo.save(Book.builder()
-                        .name(bookAddRequest.getName())
-                        .author(bookAddRequest.getAuthor())
-                        .price(bookAddRequest.getPrice())
-                        .category(category)
-                        .publishYear(bookAddRequest.getPublishYear())
-                        .numberSales(bookAddRequest.getNumberSales())
-                        .publisher(bookAddRequest.getPublisher())
-                        .quantity(bookAddRequest.getQuantity())
-                        .description(bookAddRequest.getDescription())
-                .build()));
+        return ResponseEntity.ok(bookService.addBook(bookRequest));
     }
 
-    @PutMapping("/{bookId}")
-    public ResponseEntity<Book> updateBook(@RequestBody Book book){
-        return ResponseEntity.ok(bookRepo.save(book));
+    @PutMapping
+    public ResponseEntity<BookResponse> updateBook(
+            @RequestBody BookRequest book
+    ) {
+
+        return ResponseEntity.ok(bookService.updateBook(book));
     }
+
     @DeleteMapping("/{bookId}")
-    public String deleteBook(@PathVariable Integer bookId){
-        try{
-            bookRepo.deleteById(bookId);
-        }catch (EmptyResultDataAccessException e){
-            log.info(e.getMessage());
-            return "fail";
-        }
-        return "success";
+    public ResponseEntity<String> deleteBook(
+            @PathVariable Integer bookId
+    ) {
+
+        return ResponseEntity.ok(bookService.deleteBook(bookId));
     }
 }

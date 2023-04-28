@@ -1,7 +1,6 @@
 package com.example.ebookservice.payload.request;
 
-import com.example.ebookdatamodel.entity.Category;
-import com.example.ebookdatamodel.entity.Image;
+import com.example.ebookservice.dto.ImageDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +8,10 @@ import lombok.Setter;
 import java.util.List;
 
 @Getter @Setter
-public class BookAddRequest {
+public class BookRequest {
+
+    @JsonProperty("id")
+    private Integer id;
 
     @JsonProperty("name")
     private String name;
@@ -35,9 +37,9 @@ public class BookAddRequest {
     @JsonProperty("quantity")
     private Integer quantity;
 
-    @JsonProperty("category")
-    private Category category;
+    @JsonProperty("category_id")
+    private Integer categoryId;
 
     @JsonProperty("images")
-    private List<Image> image;
+    private List<ImageDTO> images;
 }
