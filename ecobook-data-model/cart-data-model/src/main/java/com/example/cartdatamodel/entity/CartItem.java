@@ -1,6 +1,5 @@
 package com.example.cartdatamodel.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 
 import javax.persistence.*;

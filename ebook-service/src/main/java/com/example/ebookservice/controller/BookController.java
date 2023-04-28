@@ -17,13 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/api/ebook", produces = "application/json")
-@Slf4j
 @RequiredArgsConstructor
 public class BookController {
-    @Autowired
-    private EntityLinks entityLinks;
+
     private final BookRepository bookRepo;
     private final CategoryRepository categoryRepo;
 
@@ -33,7 +32,7 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}")
-    public ResponseEntity<Book> getDetail(@PathVariable Integer bookId){
+    public ResponseEntity<Book> getBook(@PathVariable Integer bookId){
         Optional<Book> book = bookRepo.findById(bookId);
         if(book.isPresent()){
             return ResponseEntity.ok(book.get());

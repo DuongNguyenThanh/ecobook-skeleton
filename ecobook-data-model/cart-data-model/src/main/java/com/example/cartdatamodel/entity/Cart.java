@@ -1,5 +1,6 @@
 package com.example.cartdatamodel.entity;
 
+import com.example.cartdatamodel.entity.enumtype.StatusEnum;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -22,7 +23,8 @@ public class Cart extends BaseModel {
     private Integer userId;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
     private List<CartItem> items;

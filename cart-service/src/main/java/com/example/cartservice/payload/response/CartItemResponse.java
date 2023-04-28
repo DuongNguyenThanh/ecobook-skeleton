@@ -1,18 +1,23 @@
 package com.example.cartservice.payload.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 public class CartItemResponse {
+
+    @JsonProperty("id")
     private Integer id;
+
     @JsonProperty("book_id")
     private Integer bookId;
+
+    @JsonProperty("price")
     private Float price;
+
+    @JsonProperty("quantity")
     private Integer quantity;
-    private CartResponse cart;
 }
