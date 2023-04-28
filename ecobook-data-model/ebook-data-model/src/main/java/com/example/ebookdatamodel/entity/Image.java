@@ -23,7 +23,6 @@ public class Image extends BaseModel {
     @Column(name = "img")
     private String img;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "book_id", referencedColumnName = "id")
     private Book book;

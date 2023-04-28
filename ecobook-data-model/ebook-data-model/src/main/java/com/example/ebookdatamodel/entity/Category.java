@@ -24,7 +24,6 @@ public class Category extends BaseModel {
     @Column(name = "description")
     private String description;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Book> bookList;
 }

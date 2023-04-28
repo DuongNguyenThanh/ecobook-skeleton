@@ -43,12 +43,10 @@ public class Book extends BaseModel {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    @JsonManagedReference
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Image> images;
 }
