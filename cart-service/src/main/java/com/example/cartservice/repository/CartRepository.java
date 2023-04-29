@@ -16,5 +16,5 @@ public interface CartRepository extends JpaRepository<Cart, Integer> {
             value = "SELECT c.* " +
                     "FROM cart c " +
                     "WHERE c.user_id = :userId AND c.status = :status ")
-    List<Cart> findAllByStatusAndUserId(String status, Long userId);
+    Cart findByStatusAndUserId(String status, Long userId);
 }

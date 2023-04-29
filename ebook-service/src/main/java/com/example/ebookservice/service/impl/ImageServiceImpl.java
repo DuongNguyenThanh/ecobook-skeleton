@@ -4,6 +4,7 @@ import com.example.api.exception.NotFoundException;
 import com.example.ebookdatamodel.entity.Book;
 import com.example.ebookdatamodel.entity.Image;
 import com.example.ebookservice.dto.ImageDTO;
+import com.example.ebookservice.payload.response.BookResponse;
 import com.example.ebookservice.repository.BookRepository;
 import com.example.ebookservice.repository.ImageRepository;
 import com.example.ebookservice.service.ImageService;
@@ -39,12 +40,7 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public List<ImageDTO> getAllImg() {
         return imageRepo.findAll().stream()
-                .map(p -> ImageDTO.builder()
-                        .id(p.getId())
-                        .img(p.getImg())
-                        .name(p.getName())
-                        .bookId(p.getBook().getId())
-                        .build())
+                .map(this::mapToImageDTO)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
     }
@@ -136,5 +132,16 @@ public class ImageServiceImpl implements ImageService {
         } catch (EmptyResultDataAccessException e) {
             log.info(e.getMessage());
         }
+    }
+
+    @Override
+    public ImageDTO mapToImageDTO(Image image) {
+
+        return ImageDTO.builder()
+                .id(image.getId())
+                .img(image.getImg())
+                .name(image.getName())
+                .bookId(image.getBook().getId())
+                .build();
     }
 }

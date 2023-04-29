@@ -12,6 +12,8 @@ public interface BookService {
 
     BookResponse getBookById(Integer bookId);
 
+    List<BookResponse> getBooksByListIds(List<Integer> bookIds);
+
     List<BookResponse> getBooksByCategory(Integer cateId);
 
     List<BookResponse> searchBook(String key, Float from, Float to);

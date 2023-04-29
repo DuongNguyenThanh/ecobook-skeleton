@@ -20,7 +20,7 @@ public class Cart extends BaseModel {
     private Integer id;
 
     @Column(name = "user_id")
-    private Integer userId;
+    private Long userId;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)

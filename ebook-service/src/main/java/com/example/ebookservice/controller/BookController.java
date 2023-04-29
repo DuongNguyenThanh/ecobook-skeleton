@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 @Slf4j
@@ -32,6 +33,14 @@ public class BookController {
         return ResponseEntity.ok(bookService.getBookById(bookId));
     }
 
+    @GetMapping("/get-in-list-ids")
+    public ResponseEntity<List<BookResponse>> getBooks(
+            @RequestBody List<Integer> ids
+    ) {
+
+        return ResponseEntity.ok(bookService.getBooksByListIds(ids));
+    }
+
     @GetMapping("/book-cate")
     public ResponseEntity<List<BookResponse>> getBooksByCategory(
             @RequestParam(name = "cate-id") Integer cateId
@@ -40,7 +49,6 @@ public class BookController {
         return ResponseEntity.ok(bookService.getBooksByCategory(cateId));
     }
 
-    //search book theo ten
     @GetMapping("/search")
     public ResponseEntity<List<BookResponse>> searchBookByName(
             @RequestParam String key,

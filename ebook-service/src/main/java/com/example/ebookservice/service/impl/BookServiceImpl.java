@@ -11,6 +11,8 @@ import com.example.ebookservice.repository.BookRepository;
 import com.example.ebookservice.repository.CategoryRepository;
 import com.example.ebookservice.repository.ImageRepository;
 import com.example.ebookservice.service.BookService;
+import com.example.ebookservice.service.CategoryService;
+import com.example.ebookservice.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -28,6 +30,8 @@ public class BookServiceImpl implements BookService {
     private final BookRepository bookRepo;
     private final CategoryRepository categoryRepo;
     private final ImageRepository imageRepo;
+    private final ImageService imageService;
+    private final CategoryService categoryService;
 
     @Override
     public List<BookResponse> getAllBooks() {
@@ -49,6 +53,20 @@ public class BookServiceImpl implements BookService {
         if(Objects.nonNull(book)) {
 
             return mapToBookResponse(book);
+        }
+        return null;
+    }
+
+    @Override
+    public List<BookResponse> getBooksByListIds(List<Integer> bookIds) {
+
+        List<Book> books = bookRepo.findByIdIn(bookIds);
+
+        if(!books.isEmpty()) {
+
+            return books.stream()
+                    .map(this::mapToBookResponse)
+                    .collect(Collectors.toList());
         }
         return null;
     }
@@ -146,18 +164,23 @@ public class BookServiceImpl implements BookService {
 
     public BookResponse mapToBookResponse(Book book) {
 
+        List<ImageDTO> dtos = book.getImages().stream()
+                .map(imageService::mapToImageDTO)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
         return BookResponse.builder()
                         .id(book.getId())
                         .name(book.getName())
                         .author(book.getAuthor())
-                        .image(book.getImages())
+                        .images(dtos)
                         .publisher(book.getPublisher())
                         .publishYear(book.getPublishYear())
                         .numberSales(book.getNumberSales())
                         .price(book.getPrice())
                         .quantity(book.getQuantity())
                         .description(book.getDescription())
-                        .category(book.getCategory())
+                        .category(categoryService.mapToCategoryResponse(book.getCategory()))
                         .build();
     }
 }

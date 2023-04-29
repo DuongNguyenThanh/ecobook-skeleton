@@ -18,4 +18,6 @@ public interface ImageService {
     Image updateImage(ImageDTO imageDTO);
 
     void deleteImage(Integer imageId);
+
+    ImageDTO mapToImageDTO(Image image);
 }

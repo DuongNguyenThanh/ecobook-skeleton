@@ -22,15 +22,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public List<CategoryResponse> getAll() {
 
-        List<CategoryResponse> responses = categoryRepo.findAll().stream()
-                .map(p -> {
-                    return CategoryResponse.builder()
-                            .id(p.getId())
-                            .name(p.getName())
-                            .description(p.getDescription())
-                            .build();
-                }).collect(Collectors.toList());
-        return responses;
+        return categoryRepo.findAll().stream()
+                .map(this::mapToCategoryResponse)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -41,11 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
                         String.format("findById error: Not found Category with id: %s", cateId)
                 )
         );
-        return CategoryResponse.builder()
-                .id(cateId)
-                .name(category.getName())
-                .description(category.getDescription())
-                .build();
+        return mapToCategoryResponse(category);
     }
 
     @Override
@@ -57,11 +48,7 @@ public class CategoryServiceImpl implements CategoryService {
                             .name(request.getName())
                             .description(request.getDescription())
                     .build());
-            return CategoryResponse.builder()
-                    .id(c.getId())
-                    .name(c.getName())
-                    .description(c.getDescription())
-                    .build();
+            return mapToCategoryResponse(c);
         }
         return null;
     }
@@ -76,12 +63,18 @@ public class CategoryServiceImpl implements CategoryService {
                     .name(request.getName())
                     .description(request.getDescription())
                     .build());
-            return CategoryResponse.builder()
-                    .id(category.getId())
-                    .name(category.getName())
-                    .description(category.getDescription())
-                    .build();
+            return mapToCategoryResponse(category);
         }
         return null;
+    }
+
+    @Override
+    public CategoryResponse mapToCategoryResponse(Category category) {
+
+        return CategoryResponse.builder()
+                .id(category.getId())
+                .name(category.getName())
+                .description(category.getDescription())
+                .build();
     }
 }

@@ -1,9 +1,10 @@
 package com.example.ebookservice.payload.response;
 
-import com.example.ebookdatamodel.entity.Category;
-import com.example.ebookdatamodel.entity.Image;
+import com.example.ebookservice.dto.ImageDTO;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -39,8 +40,8 @@ public class BookResponse {
     private Integer quantity;
 
     @JsonProperty("category")
-    private Category category;
+    private CategoryResponse category;
 
     @JsonProperty("images")
-    private List<Image> image;
+    private List<ImageDTO> images;
 }

@@ -1,12 +1,13 @@
 package com.example.cartservice.controller;
 
+import com.example.api.controller.BaseController;
+import com.example.cartservice.payload.request.CartItemRequest;
 import com.example.cartservice.payload.response.CartResponse;
 import com.example.cartservice.service.CartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping(path = "api/cart")
-public class CartController {
+public class CartController extends BaseController {
 
     private final CartService cartService;
 
@@ -27,6 +28,15 @@ public class CartController {
     public List<CartResponse> getActiveCart(){
         return cartService.getActiveCart(1L);
     }
+
+//    @PostMapping("/update-cart")
+//    public ResponseEntity<?> updateCart(
+//            @RequestBody CartItemRequest request
+//    ) {
+//        Long userId = getOriginalId();
+//
+//    }
+
 
 
 }
