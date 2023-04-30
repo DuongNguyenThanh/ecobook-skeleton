@@ -52,9 +52,11 @@ public class ImageServiceImpl implements ImageService {
         String imgDir ="D:/image/anya.png";
         Optional<Image> image = imageRepo.findById(imageId);
         if (image.isPresent()) {
-            imgDir = imgDir.substring(0,9)+image.get().getImg();
-            if(image.get().getImg().split("\\.")[1].equals("jpg")) {
-                jpgCheck = true;
+            if(image.get().getImg().matches("^[^\\.]*\\.[^\\.]*$")){
+                imgDir = imgDir.substring(0,9)+image.get().getImg();
+                if(image.get().getImg().split("\\.")[1].equals("jpg")){
+                    jpgCheck = true;
+                }
             }
         }
 

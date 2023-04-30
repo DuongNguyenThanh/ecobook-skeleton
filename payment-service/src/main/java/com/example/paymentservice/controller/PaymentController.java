@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(path = "/api/v1/payment", produces = "application/json")
+@RequestMapping(path = "/api/payment", produces = "application/json")
 public class PaymentController {
     public static final String URL_PAYPAL_SUCCESS = "/success";
     public static final String URL_PAYPAL_CANCEL = "/cancel";
@@ -55,9 +55,11 @@ public class PaymentController {
     }
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public String pay(HttpServletRequest request, @RequestBody PaymentRequest pr ){
-        String cancelUrl = Utils.getBaseURL(request) + "/api/v1/payment" + URL_PAYPAL_CANCEL;
-        String successUrl = Utils.getBaseURL(request) + "/api/v1/payment" + URL_PAYPAL_SUCCESS+"?userId="+
+    public String pay(HttpServletRequest request,
+                      @RequestBody PaymentRequest pr
+    ) {
+        String cancelUrl = Utils.getBaseURL(request) + "/api/payment" + URL_PAYPAL_CANCEL;
+        String successUrl = Utils.getBaseURL(request) + "/api/payment" + URL_PAYPAL_SUCCESS + "?userId=" +
                 pr.getUserId()+"&orderId="+pr.getOrderId();
         try {
             Payment payment = paypalService.createPayment(
@@ -84,8 +86,10 @@ public class PaymentController {
         return "cancel";
     }
     @GetMapping(URL_PAYPAL_SUCCESS)
-    public String successPay(@RequestParam("paymentId") String paymentId, @RequestParam("PayerID") String payerId,
-                             @RequestParam("userId") Long userId,@RequestParam("orderId") Integer orderId){
+    public String successPay(@RequestParam("paymentId") String paymentId,
+                             @RequestParam("PayerID") String payerId,
+                             @RequestParam("userId") Long userId,
+                             @RequestParam("orderId") Integer orderId){
         try {
             //if user order token jj do
             Payment payment = paypalService.executePayment(paymentId, payerId);
