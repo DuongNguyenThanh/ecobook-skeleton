@@ -16,9 +16,10 @@
             <column name="product_id" type="INT" remarks="Product nào?">
                 <constraints nullable="false"/>
             </column>
-            <column name="context" type="VARCHAR(255)" remarks="Nội dung">
+            <column name="context" type="TEXT" remarks="Nội dung">
                 <constraints nullable="false"/>
             </column>
+            <column name="like" type="INT" remarks="Lượt LIKE" />
 
             <column name="created_at" type="DATETIME" defaultValue="NOW()"/>
             <column name="updated_at" type="DATETIME" defaultValue="NOW()"/>

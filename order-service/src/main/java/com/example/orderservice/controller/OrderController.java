@@ -29,41 +29,61 @@ public class OrderController {
 
     @PostMapping("/create")  
     @ResponseStatus(HttpStatus.CREATED)
-    public String placeOrder(@RequestBody OrderRequest orderRequest) {
+    public String placeOrder(
+            @RequestBody OrderRequest orderRequest
+    ) {
+
         orderService.placeOrder(orderRequest);
         return "Order Placed Successffuly";
     }
 
     @DeleteMapping("/delete/{orderId}")
-    public String deleteOrder(@PathVariable Integer orderId) {
+    public String deleteOrder(
+            @PathVariable Integer orderId
+    ) {
+
         orderService.deleteOrder(orderId);
         return "Order have been deleted";
     }
 
     @GetMapping("/cancel/{orderId}")
-    public String cancelOrder(@PathVariable Integer orderId) {
+    public String cancelOrder(
+            @PathVariable Integer orderId
+    ) {
+
         orderService.cancelOrder(orderId);
         return "Order have been canceled";
     }
 
     @PostMapping("/get/{order_id}")
-    public ResponseEntity<Order> getOrder(@PathVariable Integer orderId) {
+    public ResponseEntity<Order> getOrder(
+            @PathVariable Integer orderId
+    ) {
+
         return ResponseEntity.ok(orderService.getOrder(orderId));
     }
 
     @PostMapping("/getOrderOfCustomer/{customer_id}")
-    public ResponseEntity<List<Order>> getOrderByCustomer(@PathVariable Integer customerId) {
+    public ResponseEntity<List<Order>> getOrderByCustomer(
+            @PathVariable Integer customerId
+    ) {
+
         return ResponseEntity.ok(orderService.getOrderByCoustomer(customerId));
     }
 
     @PostMapping("/updateStatus/{orderId}")
-    public String updateOrderStatus(@RequestParam("status") String status, @PathVariable Integer orderId) {
+    public String updateOrderStatus(
+            @RequestParam("status") String status,
+            @PathVariable Integer orderId
+    ) {
+
         orderService.updateOrderStatus(status, orderId);
         return "Order have been updated";
     }
 
     @GetMapping("getAllOrder")
     public ResponseEntity<List<Order>> getAllOrder() {
+
         return ResponseEntity.ok(orderService.getAllOrder());
     }
 }
