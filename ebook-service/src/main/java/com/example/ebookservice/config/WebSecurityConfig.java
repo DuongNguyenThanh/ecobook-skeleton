@@ -29,6 +29,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers(GET, "/api/ebook/**").permitAll()
+                .antMatchers("/api/ebook/get-in-list-ids/**").permitAll()
                 .antMatchers(POST, "/api/ebook/**").hasAnyAuthority("ADMIN")
                 .antMatchers(PUT, "/api/ebook/**").hasAnyAuthority("ADMIN")
                 .antMatchers(DELETE, "/api/ebook/**").hasAnyAuthority("ADMIN")

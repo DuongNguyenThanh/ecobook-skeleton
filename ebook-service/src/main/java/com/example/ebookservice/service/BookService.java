@@ -1,6 +1,5 @@
 package com.example.ebookservice.service;
 
-import com.example.ebookdatamodel.entity.Book;
 import com.example.ebookservice.payload.request.BookRequest;
 import com.example.ebookservice.payload.response.BookResponse;
 
@@ -11,8 +10,6 @@ public interface BookService {
     List<BookResponse> getAllBooks();
 
     BookResponse getBookById(Integer bookId);
-
-    List<BookResponse> getBooksByListIds(List<Integer> bookIds);
 
     List<BookResponse> getBooksByCategory(Integer cateId);
 

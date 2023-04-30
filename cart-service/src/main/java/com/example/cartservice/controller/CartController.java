@@ -20,23 +20,34 @@ public class CartController extends BaseController {
     private final CartService cartService;
 
     @GetMapping("/all-cart")
-    public List<CartResponse> getAll(){
-        return null;
+    public ResponseEntity<List<CartResponse>> getAll() {
+
+        return ResponseEntity.ok(cartService.getAllCarts());
     }
 
     @GetMapping("/active-cart")
-    public List<CartResponse> getActiveCart(){
-        return cartService.getActiveCart(1L);
+    public ResponseEntity<CartResponse> getActiveCart() {
+
+//        Long userId = getOriginalId();
+        return ResponseEntity.ok(cartService.getActiveCart(1L));
     }
 
-//    @PostMapping("/update-cart")
-//    public ResponseEntity<?> updateCart(
-//            @RequestBody CartItemRequest request
-//    ) {
+    @PostMapping("/update-cart")
+    public ResponseEntity<?> updateCart(
+            @RequestBody CartItemRequest request
+    ) {
+
 //        Long userId = getOriginalId();
-//
-//    }
+        cartService.updateCart(request, 1L);
+        return ResponseEntity.ok("Update Cart success!");
+    }
 
+    @DeleteMapping("/{cartId}")
+    public ResponseEntity<?> deleteCart(
+            @PathVariable Integer cartId
+    ) {
 
-
+        cartService.deleteCart(cartId);
+        return ResponseEntity.ok("Delete Cart success!");
+    }
 }

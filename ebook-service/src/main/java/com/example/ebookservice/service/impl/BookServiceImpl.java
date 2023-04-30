@@ -58,20 +58,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookResponse> getBooksByListIds(List<Integer> bookIds) {
-
-        List<Book> books = bookRepo.findByIdIn(bookIds);
-
-        if(!books.isEmpty()) {
-
-            return books.stream()
-                    .map(this::mapToBookResponse)
-                    .collect(Collectors.toList());
-        }
-        return null;
-    }
-
-    @Override
     public List<BookResponse> getBooksByCategory(Integer cateId) {
 
         List<Book> books = bookRepo.findAllByCategoryId(cateId);

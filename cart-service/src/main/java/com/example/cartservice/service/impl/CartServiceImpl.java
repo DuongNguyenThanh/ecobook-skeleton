@@ -1,22 +1,24 @@
 package com.example.cartservice.service.impl;
 
+import com.example.api.exception.NotFoundException;
 import com.example.cartdatamodel.entity.Cart;
 import com.example.cartdatamodel.entity.CartItem;
 import com.example.cartdatamodel.entity.enumtype.StatusEnum;
 import com.example.cartservice.payload.request.CartItemRequest;
 import com.example.cartservice.payload.response.CartItemResponse;
+import com.example.cartservice.payload.response.CartResponse;
 import com.example.cartservice.repository.CartItemRepository;
 import com.example.cartservice.repository.CartRepository;
-import com.example.cartservice.payload.response.CartResponse;
+import com.example.cartservice.service.CartItemService;
 import com.example.cartservice.service.CartService;
-import com.example.proxycommon.ebook.payload.response.BookResponse;
-import com.example.proxycommon.ebook.proxy.EbookServiceProxy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,47 +28,35 @@ public class CartServiceImpl implements CartService {
 
     private final CartRepository cartRepo;
     private final CartItemRepository cartItemRepo;
-    private final EbookServiceProxy proxy;
+    private final CartItemService cartItemService;
 
     @Override
-    public List<CartResponse> getActiveCart(Long userId) {
+    public List<CartResponse> getAllCarts() {
 
-//        Cart cart = cartRepo.findByStatusAndUserId(StatusEnum.ACTIVE.name(), userId);
-//        List<Integer> bookIds = cart.getItems().stream()
-//                .map(CartItem::getBookId).collect(Collectors.toList());
-//        Map<Integer, BookResponse> bookMap = proxy.getBooks(bookIds).getBody().stream()
-//                .collect(Collectors.toMap(BookResponse::getId, b -> b));
+        return cartRepo.findAll().stream()
+                .map(this::mapToCartResponse)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
 
-        log.info("Aabc");
-        BookResponse response = proxy.getBook(1).getBody();
-        log.info("Aabc");
+    @Override
+    public CartResponse getActiveCart(Long userId) {
 
+        Cart cart = cartRepo.findByStatusAndUserId(StatusEnum.ACTIVE.name(), userId);
+        if(Objects.nonNull(cart)) {
+            List<CartItemResponse> cartItemResponses = cart.getItems().stream()
+                    .map(cartItemService::mapToCartItemResponse)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
 
-//        CartResponse responses = cartRepo.findByStatusAndUserId(StatusEnum.ACTIVE.name(), userId)
-//                .stream()
-//                .map(
-//                        p -> {
-//                            List<CartItemResponse> cartItemResponses = p.getItems().stream()
-//                                    .map(m -> CartItemResponse.builder()
-//                                            .id(m.getId())
-//                                            .bookId(m.getBookId())
-//                                            .price(m.getPrice())
-//                                            .quantity(m.getQuantity())
-//                                            .build())
-//                                    .collect(Collectors.toList());
-//
-//                            return CartResponse.builder()
-//                                    .userId(userId)
-//                                    .status(p.getStatus().name())
-//                                    .items(cartItemResponses)
-//                                    .build();
-//                        }
-//                )
-//                .filter(Objects::nonNull)
-//                .collect(Collectors.toList());
+            return CartResponse.builder()
+                    .id(cart.getId())
+                    .userId(userId)
+                    .status(cart.getStatus().name())
+                    .items(cartItemResponses)
+                    .build();
+        }
 
-
-//        return responses;
         return null;
     }
 
@@ -81,11 +71,15 @@ public class CartServiceImpl implements CartService {
                     .filter(p -> p.getBookId().equals(request.getBookId()))
                     .findFirst();
             if(cartItem.isPresent()) {
+                //update cart item - cart item exist
+
                 Integer currQuantity = cartItem.get().getQuantity();
                 cartItem.get().setQuantity(currQuantity+1);
 
                 cartItemRepo.save(cartItem.get());
             } else {
+                //add cart item - cart item isn't exist
+
                 cartItemRepo.save(CartItem.builder()
                         .cart(cart)
                         .bookId(request.getBookId())
@@ -97,41 +91,44 @@ public class CartServiceImpl implements CartService {
         } else {
             //add cart
 
+            Cart createCart = cartRepo.save(Cart.builder()
+                    .userId(userId)
+                    .status(StatusEnum.ACTIVE)
+                    .build());
+
             List<CartItem> cartItems = new ArrayList<>();
             cartItems.add(CartItem.builder()
                     .bookId(request.getBookId())
                     .quantity(1)
                     .price(request.getPrice())
+                    .cart(createCart)
                     .build());
 
-            cartRepo.save(Cart.builder()
-                            .userId(userId)
-                            .status(StatusEnum.ACTIVE)
-                            .items(cartItems)
-                    .build());
+            cartItemRepo.saveAll(cartItems);
+
         }
     }
 
     @Override
-    public Iterable<CartResponse> getAll() {
-//        List<Cart> list = cartRepo.findAll();
-//        List<CartResponse> cartResponses = cartRepo.findAll().stream()
-//                .map(p -> {
-//                    return CartResponse.builder()
-//                            .id(p.getId())
-//                            .build();
-//                }).collect(Collectors.toList());
-        return null;
+    public void deleteCart(Integer cartId) {
+
+        Cart cart = cartRepo.findById(cartId).orElseThrow(
+                () -> new NotFoundException(
+                        String.format("deleteCart error: Not found Cart with id: %s", cartId)
+                )
+        );
+        cartRepo.delete(cart);
     }
 
-    @Override
-    public Iterable<CartResponse> getByUserId(Integer id) {
-        List<Cart> list = cartRepo.findAll();
-        return null;
-    }
+    public CartResponse mapToCartResponse(Cart cart) {
 
-    public BookResponse getBook(Integer bookId) {
-        BookResponse response = proxy.getBook(bookId).getBody();
-        return Objects.isNull(response) ? null : response;
+        return CartResponse.builder()
+                .id(cart.getId())
+                .items(cart.getItems().stream()
+                        .map(cartItemService::mapToCartItemResponse)
+                        .collect(Collectors.toList()))
+                .status(cart.getStatus().name())
+                .userId(cart.getUserId())
+                .build();
     }
 }

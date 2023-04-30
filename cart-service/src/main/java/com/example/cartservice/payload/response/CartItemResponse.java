@@ -1,5 +1,6 @@
 package com.example.cartservice.payload.response;
 
+import com.example.proxycommon.ebook.payload.response.BookResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +13,8 @@ public class CartItemResponse {
     @JsonProperty("id")
     private Integer id;
 
-    @JsonProperty("book_id")
-    private Integer bookId;
+    @JsonProperty("book")
+    private BookResponse book;
 
     @JsonProperty("price")
     private Float price;

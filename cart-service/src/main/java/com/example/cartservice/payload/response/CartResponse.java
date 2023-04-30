@@ -10,6 +10,12 @@ import java.util.List;
 @Builder
 public class CartResponse {
 
+    @JsonProperty("id")
+    private Integer id;
+
+    @JsonProperty("user_id")
+    private Long userId;
+
     @JsonProperty("status")
     private String status;
 

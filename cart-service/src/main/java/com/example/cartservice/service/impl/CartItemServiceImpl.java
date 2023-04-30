@@ -1,38 +1,55 @@
 package com.example.cartservice.service.impl;
 
 import com.example.api.exception.NotFoundException;
-import com.example.cartdatamodel.entity.Cart;
-import com.example.cartservice.payload.request.DelCartItemRequest;
+import com.example.cartdatamodel.entity.CartItem;
+import com.example.cartservice.payload.response.CartItemResponse;
 import com.example.cartservice.repository.CartItemRepository;
 import com.example.cartservice.repository.CartRepository;
 import com.example.cartservice.service.CartItemService;
+import com.example.proxycommon.ebook.payload.response.BookResponse;
+import com.example.proxycommon.ebook.proxy.EbookServiceProxy;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Objects;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CartItemServiceImpl implements CartItemService {
 
     private final CartRepository cartRepo;
     private final CartItemRepository cartItemRepo;
+    private final EbookServiceProxy ebookServiceProxy;
 
     @Override
-    public void deleteCartItem(DelCartItemRequest request) {
+    @Transactional
+    public void deleteCartItem(Integer cartId) {
 
-        Cart cart = cartRepo.findById(request.getCartId()).orElseThrow(
+        CartItem cartItem = cartItemRepo.findById(cartId).orElseThrow(
                 () -> new NotFoundException(
-                      String.format("deleteCartItem error: Not found Cart with id: %s", request.getCartId())
+                        String.format("deleteCartItem error: Not found Cart Item with id: %s", cartId)
                 )
         );
+        cartItemRepo.delete(cartItem);
+    }
 
-        if(cart.getItems().isEmpty() ||
-                (cart.getItems().size() == 1 &&
-                        cart.getItems().get(0).getId().equals(request.getCartItemId())
-                )
-        ) {
-            cartRepo.delete(cart);
-        }
+    public BookResponse getBookById(Integer bookId) {
+        BookResponse responses = ebookServiceProxy.getBook(bookId);
+        return Objects.isNull(responses) ? null : responses;
+    }
 
-        cartItemRepo.deleteById(request.getCartItemId());
+    @Override
+    public CartItemResponse mapToCartItemResponse(CartItem cartItem) {
+
+        BookResponse bookResponse = getBookById(cartItem.getBookId());
+        return CartItemResponse.builder()
+                .id(cartItem.getId())
+                .book(bookResponse)
+                .quantity(cartItem.getQuantity())
+                .price(cartItem.getPrice())
+                .build();
     }
 }

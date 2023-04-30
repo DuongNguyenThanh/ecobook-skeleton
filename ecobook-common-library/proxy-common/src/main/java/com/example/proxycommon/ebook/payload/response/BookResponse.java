@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 
 @Data
 @Builder
@@ -27,15 +29,18 @@ public class BookResponse {
     @JsonProperty("publish_year")
     private String publishYear;
 
-    @JsonProperty("category")
+    @JsonProperty("price")
     private Float price;
 
-    @JsonProperty("category")
+    @JsonProperty("number_sales")
     private Integer numberSales;
 
-    @JsonProperty("category")
+    @JsonProperty("description")
     private String description;
 
-    @JsonProperty("category")
+    @JsonProperty("quantity")
     private Integer quantity;
+
+    @JsonProperty("images")
+    private List<ImageResponse> images;
 }

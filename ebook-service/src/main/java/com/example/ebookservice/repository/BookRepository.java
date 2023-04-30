@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import java.util.Collection;
 import java.util.List;
 
 @Repository
@@ -17,5 +16,4 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
             value = "SELECT b.* FROM book b WHERE b.category_id = :cateId")
     List<Book> findAllByCategoryId(Integer cateId);
 
-    List<Book> findByIdIn(Collection<Integer> bookIds);
 }

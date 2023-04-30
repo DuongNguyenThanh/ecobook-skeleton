@@ -6,11 +6,12 @@ import com.example.cartservice.payload.response.CartResponse;
 import java.util.List;
 
 public interface CartService {
-    Iterable<CartResponse> getAll();
-    Iterable<CartResponse> getByUserId(Integer id);
 
-    List<CartResponse> getActiveCart(Long userId);
+    List<CartResponse> getAllCarts();
+
+    CartResponse getActiveCart(Long userId);
 
     void updateCart(CartItemRequest request, Long userId);
 
+    void deleteCart(Integer cartId);
 }

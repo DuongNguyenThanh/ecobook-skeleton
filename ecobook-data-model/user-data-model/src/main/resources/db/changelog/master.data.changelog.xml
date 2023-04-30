@@ -5,10 +5,18 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <changeSet author="duongnt" id="1681998616760">
+    <changeSet author="duongnt" id="1681998616760-01">
         <sqlFile dbms="mysql"
                  encoding="UTF-8"
                  path="master-data-sql/addUserAccountAdmin.sql"
+                 relativeToChangelogFile="true"
+                 stripComments="true"/>
+    </changeSet>
+
+    <changeSet author="duongnt" id="1681998616760-02">
+        <sqlFile dbms="mysql"
+                 encoding="UTF-8"
+                 path="master-data-sql/addUserAccountTest.sql"
                  relativeToChangelogFile="true"
                  stripComments="true"/>
     </changeSet>
