@@ -1,5 +1,7 @@
 package com.example.cartservice.config;
 
+import com.example.api.filter.AuthTokenFilter;
+import com.example.api.jwt.AuthEntryPointJwt;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import feign.gson.GsonDecoder;
@@ -20,5 +22,15 @@ public class BeanConfig {
     @Bean
     public Decoder decoder() {
         return new GsonDecoder();
+    }
+
+    @Bean
+    AuthTokenFilter authTokenFilter() {
+        return new AuthTokenFilter();
+    }
+
+    @Bean
+    AuthEntryPointJwt authEntryPointJwt() {
+        return new AuthEntryPointJwt();
     }
 }

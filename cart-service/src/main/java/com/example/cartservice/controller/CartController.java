@@ -28,8 +28,8 @@ public class CartController extends BaseController {
     @GetMapping("/active-cart")
     public ResponseEntity<CartResponse> getActiveCart() {
 
-//        Long userId = getOriginalId();
-        return ResponseEntity.ok(cartService.getActiveCart(1L));
+        Long userId = getOriginalId();
+        return ResponseEntity.ok(cartService.getActiveCart(userId));
     }
 
     @PostMapping("/update-cart")
@@ -37,8 +37,8 @@ public class CartController extends BaseController {
             @RequestBody CartItemRequest request
     ) {
 
-//        Long userId = getOriginalId();
-        cartService.updateCart(request, 1L);
+        Long userId = getOriginalId();
+        cartService.updateCart(request, userId);
         return ResponseEntity.ok("Update Cart success!");
     }
 

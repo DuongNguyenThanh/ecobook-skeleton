@@ -1,4 +1,4 @@
-package com.example.ebookservice.config;
+package com.example.cartservice.config;
 
 import com.example.api.filter.AuthTokenFilter;
 import com.example.api.jwt.AuthEntryPointJwt;
@@ -28,20 +28,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(GET, "/api/ebook/**").permitAll()
-                .antMatchers(POST, "/api/ebook/**").hasAnyAuthority("ADMIN")
-                .antMatchers(PUT, "/api/ebook/**").hasAnyAuthority("ADMIN")
-                .antMatchers(DELETE, "/api/ebook/**").hasAnyAuthority("ADMIN")
+                .antMatchers("/api/cart/**").hasAnyAuthority("USER", "ADMIN")
+                .antMatchers("/api/cart-item/**").hasAnyAuthority("USER", "ADMIN")
 
-                .antMatchers(GET, "/api/category/**").permitAll()
-                .antMatchers(POST, "/api/category/**").hasAnyAuthority("ADMIN")
-                .antMatchers(PUT, "/api/category/**").hasAnyAuthority("ADMIN")
-                .antMatchers(DELETE, "/api/category/**").hasAnyAuthority("ADMIN")
-
-                .antMatchers(GET, "/api/image/**").permitAll()
-                .antMatchers(POST, "/api/image/**").hasAnyAuthority("ADMIN")
-                .antMatchers(PUT, "/api/image/**").hasAnyAuthority("ADMIN")
-                .antMatchers(DELETE, "/api/image/**").hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated().and()
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
