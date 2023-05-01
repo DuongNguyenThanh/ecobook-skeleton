@@ -17,9 +17,6 @@ public class BookReview extends BaseModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "like")
-    private Integer likeNum;
-
     @Column(name = "context")
     private String context;
 

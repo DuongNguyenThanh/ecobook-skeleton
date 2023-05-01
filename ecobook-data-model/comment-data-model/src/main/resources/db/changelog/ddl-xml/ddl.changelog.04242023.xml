@@ -19,7 +19,6 @@
             <column name="context" type="TEXT" remarks="Nội dung">
                 <constraints nullable="false"/>
             </column>
-            <column name="like" type="INT" remarks="Lượt LIKE" />
 
             <column name="created_at" type="DATETIME" defaultValue="NOW()"/>
             <column name="updated_at" type="DATETIME" defaultValue="NOW()"/>

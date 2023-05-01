@@ -30,10 +30,9 @@ public class BookReviewServiceImpl implements BookReviewService {
     @Override
     public BookReview addReview(Long userId, AddReviewRequest reviewRequest) {
 
-        return bookReviewRepository.save( BookReview.builder()
+        return bookReviewRepository.save(BookReview.builder()
                         .context(reviewRequest.getContext())
                         .productId(reviewRequest.getProductId())
-                        .likeNum(0)
                         .userId(userId)
                 .build());
     }
