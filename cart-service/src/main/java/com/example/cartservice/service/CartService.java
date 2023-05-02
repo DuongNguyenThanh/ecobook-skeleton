@@ -13,5 +13,7 @@ public interface CartService {
 
     void updateCart(CartItemRequest request, Long userId);
 
+    void updateStatusCart(Integer cartId);
+
     void deleteCart(Integer cartId);
 }

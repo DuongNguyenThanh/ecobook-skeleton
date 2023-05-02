@@ -42,6 +42,15 @@ public class CartController extends BaseController {
         return ResponseEntity.ok("Update Cart success!");
     }
 
+    @PostMapping("/update-status/{cartId}")
+    public ResponseEntity<?> updateStatusCart(
+            @PathVariable Integer cartId
+    ) {
+
+        cartService.updateStatusCart(cartId);
+        return ResponseEntity.ok("Update Status Cart success!");
+    }
+
     @DeleteMapping("/{cartId}")
     public ResponseEntity<?> deleteCart(
             @PathVariable Integer cartId

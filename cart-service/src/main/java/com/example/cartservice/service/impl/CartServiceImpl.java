@@ -105,8 +105,19 @@ public class CartServiceImpl implements CartService {
                     .build());
 
             cartItemRepo.saveAll(cartItems);
-
         }
+    }
+
+    @Override
+    public void updateStatusCart(Integer cartId) {
+
+        Cart cart = cartRepo.findById(cartId).orElseThrow(
+                () -> new NotFoundException(
+                        String.format("updateStatusCart error: Not found Cart with id: %s", cartId)
+                )
+        );
+        cart.setStatus(StatusEnum.CHECKOUT);
+        cartRepo.save(cart);
     }
 
     @Override

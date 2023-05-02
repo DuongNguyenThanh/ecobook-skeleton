@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItemDto {
-
-    @JsonProperty("id")
-    private Integer id;
+public class OrderItemDTO {
 
     @JsonProperty("price")
     private float price;

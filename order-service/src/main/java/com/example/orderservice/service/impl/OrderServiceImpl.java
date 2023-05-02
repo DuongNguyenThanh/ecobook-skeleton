@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final WebClient.Builder webClientBuilder;
 
     public void updateOrderStatus(String status, Integer id) {
         Order order = orderRepository.findById(id).get();
