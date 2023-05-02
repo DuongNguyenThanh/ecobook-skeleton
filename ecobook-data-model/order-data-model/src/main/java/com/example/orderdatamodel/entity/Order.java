@@ -1,5 +1,6 @@
 package com.example.orderdatamodel.entity;
 
+import com.example.orderdatamodel.entity.enumtype.OrderStatusEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,7 +22,8 @@ public class Order extends BaseModel{
     private Float subTotal;
 
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatusEnum status;
 
     @Column(name = "note")
     private String note;

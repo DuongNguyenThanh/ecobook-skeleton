@@ -3,6 +3,8 @@ package com.example.userservice.config;
 import com.example.api.filter.AuthTokenFilter;
 import com.example.api.jwt.AuthEntryPointJwt;
 import com.example.userdatamodel.entity.enumtype.AccountRoleEnum;
+import com.example.userservice.security.oauth.handler.OAuth2LoginSuccessHandler;
+import com.example.userservice.security.oauth.service.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +29,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final PasswordEncoder passwordEncoder;
     private final AuthTokenFilter authTokenFilter;
     private final AuthEntryPointJwt unauthorizedHandler;
+    private final CustomOAuth2UserService oauthUserService;
+    private final OAuth2LoginSuccessHandler oAuth2LoginSuccessHandler;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -45,10 +49,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/api/user/**").permitAll()
-                .antMatchers("/api/user/hello/**").hasAnyAuthority(AccountRoleEnum.ADMIN.name())
+                .antMatchers("/api/user/**", "/oauth/**", "/login/oauth2/code/**").permitAll()
+                .antMatchers("/api/user/hello/**").hasAnyAuthority(AccountRoleEnum.ROLE_ADMIN.name(), AccountRoleEnum.ROLE_USER.name())
                 .anyRequest().authenticated().and()
-                .oauth2Login().and()
+                .oauth2Login()
+                    .userInfoEndpoint()
+                        .userService(oauthUserService)
+                .and()
+                .successHandler(oAuth2LoginSuccessHandler).and()
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }

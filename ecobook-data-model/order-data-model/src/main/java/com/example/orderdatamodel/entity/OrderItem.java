@@ -17,13 +17,13 @@ public class OrderItem extends BaseModel {
     private Integer id;
 
     @Column(name = "price")
-    private float price;
+    private Float price;
 
     @Column(name = "quantity")
-    private int quantity;
+    private Integer quantity;
 
     @Column(name = "book_id")
-    private int bookId;
+    private Integer bookId;
 
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")

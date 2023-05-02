@@ -1,4 +1,4 @@
-package com.example.orderservice.dto;
+package com.example.orderservice.payload.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -8,10 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItemDTO {
-
-    @JsonProperty("price")
-    private float price;
+public class OrderItemRequest {
 
     @JsonProperty("quantity")
     private int quantity;

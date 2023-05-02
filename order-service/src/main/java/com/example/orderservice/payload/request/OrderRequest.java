@@ -2,7 +2,6 @@ package com.example.orderservice.payload.request;
 
 import java.util.List;
 
-import com.example.orderservice.dto.OrderItemDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +11,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderRequest {
+
     private String note;
 
     @JsonProperty("order_items")
-    private List<OrderItemDto> listOrderItemDto;
+    private List<OrderItemRequest> orderItemRequests;
 }

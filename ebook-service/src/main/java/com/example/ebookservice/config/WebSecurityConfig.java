@@ -28,20 +28,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers(GET, "/api/ebook/**").permitAll()
-                .antMatchers(POST, "/api/ebook/**").hasAnyAuthority("ADMIN")
-                .antMatchers(PUT, "/api/ebook/**").hasAnyAuthority("ADMIN")
-                .antMatchers(DELETE, "/api/ebook/**").hasAnyAuthority("ADMIN")
+                .antMatchers(GET, "/api/ebook/**", "/api/category/**", "/api/image/**").permitAll()
+                .antMatchers(POST, "/api/ebook/**", "/api/category/**", "/api/image/**").hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers(PUT, "/api/ebook/**", "/api/category/**", "/api/image/**").hasAnyAuthority("ROLE_ADMIN")
+                .antMatchers(DELETE, "/api/ebook/**", "/api/category/**", "/api/image/**").hasAnyAuthority("ROLE_ADMIN")
 
-                .antMatchers(GET, "/api/category/**").permitAll()
-                .antMatchers(POST, "/api/category/**").hasAnyAuthority("ADMIN")
-                .antMatchers(PUT, "/api/category/**").hasAnyAuthority("ADMIN")
-                .antMatchers(DELETE, "/api/category/**").hasAnyAuthority("ADMIN")
-
-                .antMatchers(GET, "/api/image/**").permitAll()
-                .antMatchers(POST, "/api/image/**").hasAnyAuthority("ADMIN")
-                .antMatchers(PUT, "/api/image/**").hasAnyAuthority("ADMIN")
-                .antMatchers(DELETE, "/api/image/**").hasAnyAuthority("ADMIN")
                 .anyRequest().authenticated().and()
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }

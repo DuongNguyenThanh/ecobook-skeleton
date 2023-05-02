@@ -28,8 +28,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/api/cart/**").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers("/api/cart-item/**").hasAnyAuthority("USER", "ADMIN")
+                .antMatchers("/api/cart/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
+                .antMatchers("/api/cart-item/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
 
                 .anyRequest().authenticated().and()
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);

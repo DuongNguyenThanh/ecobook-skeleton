@@ -36,7 +36,7 @@ public class CartItemServiceImpl implements CartItemService {
         cartItemRepo.delete(cartItem);
     }
 
-    public BookResponse getBookById(Integer bookId) {
+    private BookResponse getBookById(Integer bookId) {
         BookResponse responses = ebookServiceProxy.getBook(bookId);
         return Objects.isNull(responses) ? null : responses;
     }

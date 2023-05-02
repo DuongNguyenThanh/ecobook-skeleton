@@ -29,7 +29,4 @@ public class UserToken {
 
     @JsonProperty("last_name")
     private String lastName;
-
-    @JsonProperty("expires_in")
-    private Long expiresIn;
 }

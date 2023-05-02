@@ -7,16 +7,17 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.api.exception.ForbiddenException;
 import com.example.api.exception.NotFoundException;
 import com.example.security.common.JwtTokenCommon;
+import com.example.security.model.UserAccountInfo;
 import com.example.security.model.UserPrincipal;
 import com.example.security.payload.UserToken;
 import com.example.userdatamodel.entity.UserAccount;
 import com.example.userdatamodel.entity.enumtype.AccountRoleEnum;
+import com.example.userdatamodel.entity.enumtype.AuthProviderEnum;
 import com.example.userservice.payload.request.LoginRequest;
 import com.example.userservice.payload.request.RegisterRequest;
 import com.example.userservice.payload.request.ResetPasswordRequest;
 import com.example.userservice.payload.response.RegisterResponse;
 import com.example.userservice.repository.UserAccountRepository;
-import com.example.userservice.service.RefreshTokenService;
 import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,6 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenCommon jwtTokenCommon;
-    private final RefreshTokenService refreshTokenService;
 
     @Value("${ecobook.app.jwtSecret}")
     private String jwtSecret;
@@ -79,23 +79,7 @@ public class UserServiceImpl implements UserService {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             UserPrincipal userDetails = (UserPrincipal) authentication.getPrincipal();
 
-            String accessToken = jwtTokenCommon.generateJwtToken(userDetails);
-            String refreshToken = jwtTokenCommon.generateJwtRefreshToken(userDetails);
-
-            Set<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
-                    .collect(Collectors.toSet());
-
-//            RefreshToken refreshToken = refreshTokenService.createRefreshToken(userDetails.getId());
-
-            return ResponseEntity.ok(UserToken.builder()
-                            .accountId(userDetails.getId())
-                            .accessToken(accessToken)
-                            .refreshToken(refreshToken)
-                            .listRole(roles)
-                            .firstName(userDetails.getFirstName())
-                            .lastName(userDetails.getLastName())
-                            .build()
-            );
+            return ResponseEntity.ok(genTokenInfo(userDetails));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(HttpStatus.UNAUTHORIZED.name());
     }
@@ -117,8 +101,9 @@ public class UserServiceImpl implements UserService {
                     .fName(request.getFName())
                     .lName(request.getLName())
                     .address(request.getAddress())
-                    .role(AccountRoleEnum.USER)
+                    .role(AccountRoleEnum.ROLE_USER)
                     .phoneNum(request.getPhoneNum())
+                    .authProvider(AuthProviderEnum.LOCAL)
                     .build());
         }
         else {
@@ -157,6 +142,40 @@ public class UserServiceImpl implements UserService {
         } else {
             log.info("Phone number exists");
         }
+    }
+
+    @Override
+    public ResponseEntity<?> genOauthToken(String username, Long userId, String name) {
+
+        UserPrincipal principal = UserPrincipal.build(
+                UserAccountInfo.builder()
+                        .userId(userId)
+                        .username(username)
+                        .roles(Collections.singletonList(AccountRoleEnum.ROLE_USER.name()))
+                        .build()
+        );
+        UserToken token = genTokenInfo(principal);
+        token.setFirstName(name);
+
+        return ResponseEntity.ok(token);
+    }
+
+    private UserToken genTokenInfo(UserPrincipal principal) {
+
+        String accessToken = jwtTokenCommon.generateJwtToken(principal);
+        String refreshToken = jwtTokenCommon.generateJwtRefreshToken(principal);
+
+        Set<String> roles = principal.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toSet());
+
+        return UserToken.builder()
+                .accountId(principal.getId())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .listRole(roles)
+                .firstName(principal.getFirstName())
+                .lastName(principal.getLastName())
+                .build();
     }
 
     @Override

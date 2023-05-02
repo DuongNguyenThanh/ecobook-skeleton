@@ -7,17 +7,16 @@ import com.example.userservice.payload.request.ResetPasswordRequest;
 import com.example.userservice.payload.response.RegisterResponse;
 import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.IOException;
 
 @RestController
 @CrossOrigin
 @RequiredArgsConstructor
+@Slf4j
 @RequestMapping("/api/user")
 public class UserAccountController extends BaseController {
 
@@ -39,6 +38,16 @@ public class UserAccountController extends BaseController {
         return userService.login(request);
     }
 
+    @GetMapping("/oauth2/success/{username}/{userId}/{name}")
+    public ResponseEntity<?> oauthSuccess(
+            @PathVariable("username") String username,
+            @PathVariable("userId") Long userId,
+            @PathVariable("name") String name
+    ) {
+
+        return ResponseEntity.ok(userService.genOauthToken(username, userId, name));
+    }
+
     @PostMapping("/register")
     ResponseEntity<RegisterResponse> addUser(
             @RequestBody @Valid RegisterRequest request
@@ -52,11 +61,5 @@ public class UserAccountController extends BaseController {
     ) {
         userService.resetPassword(request);
         return ResponseEntity.ok("Reset password completed");
-    }
-
-    @GetMapping("/token/refresh")
-    public void refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-
     }
 }

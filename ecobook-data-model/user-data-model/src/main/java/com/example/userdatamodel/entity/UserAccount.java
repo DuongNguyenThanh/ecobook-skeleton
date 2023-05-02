@@ -1,10 +1,10 @@
 package com.example.userdatamodel.entity;
 
 import com.example.userdatamodel.entity.enumtype.AccountRoleEnum;
+import com.example.userdatamodel.entity.enumtype.AuthProviderEnum;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Getter @Setter
@@ -39,4 +39,8 @@ public class UserAccount extends BaseModel {
 
     @Column(name = "phone_number")
     private String phoneNum;
+
+    @Column(name = "auth_provider")
+    @Enumerated(EnumType.STRING)
+    private AuthProviderEnum authProvider;
 }

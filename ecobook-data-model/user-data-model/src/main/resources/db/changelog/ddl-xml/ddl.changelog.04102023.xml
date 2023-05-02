@@ -24,7 +24,8 @@
             </column>
             <column name="last_name" type="VARCHAR(255)" remarks="Tên họ"/>
             <column name="address" type="VARCHAR(255)" remarks="Địa chỉ"/>
-            <column name="phone_number" type="VARCHAR(255)" remarks="Số điện thoại">
+            <column name="phone_number" type="VARCHAR(15)" remarks="Số điện thoại"/>
+            <column name="auth_provider" type="VARCHAR(15)">
                 <constraints nullable="false"/>
             </column>
 
