@@ -31,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(GET, "/api/book-review/**").permitAll()
                 .antMatchers(POST,"/api/book-review/**").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(PUT,"/api/book-review/**").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers(DELETE,"/api/book-review/**").hasAnyAuthority("ADMIN")
+                .antMatchers(DELETE,"/api/book-review/**").hasAnyAuthority("USER", "ADMIN")
 
                 .anyRequest().authenticated().and()
                 .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
