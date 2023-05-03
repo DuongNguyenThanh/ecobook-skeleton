@@ -131,7 +131,7 @@ public class CartServiceImpl implements CartService {
         cartRepo.delete(cart);
     }
 
-    public CartResponse mapToCartResponse(Cart cart) {
+    private CartResponse mapToCartResponse(Cart cart) {
 
         return CartResponse.builder()
                 .id(cart.getId())

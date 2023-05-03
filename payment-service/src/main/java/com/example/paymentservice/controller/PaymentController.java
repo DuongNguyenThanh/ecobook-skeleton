@@ -4,55 +4,53 @@ package com.example.paymentservice.controller;
 import com.example.paymentdatamodel.entity.PaymentInfo;
 import com.example.paymentservice.config.paypal.config.PaypalPaymentIntent;
 import com.example.paymentservice.config.paypal.config.PaypalPaymentMethod;
-import com.example.paymentservice.repository.PaymentRepository;
 import com.example.paymentservice.config.paypal.service.PaypalService;
 import com.example.paymentservice.config.paypal.utils.Utils;
+import com.example.paymentservice.repository.PaymentRepository;
 import com.example.paymentservice.request.PaymentRequest;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.JSONFormatter;
 import com.paypal.base.rest.PayPalRESTException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.server.EntityLinks;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping(path = "/api/payment", produces = "application/json")
+@RequiredArgsConstructor
 public class PaymentController {
     public static final String URL_PAYPAL_SUCCESS = "/success";
     public static final String URL_PAYPAL_CANCEL = "/cancel";
-    private Logger log = LoggerFactory.getLogger(getClass());
-    @Autowired
-    private PaypalService paypalService;
-    @Autowired
-    private EntityLinks entityLinks;
-    private PaymentRepository paymentRepository;
-    public PaymentController(PaymentRepository paymentRepository) {
-        this.paymentRepository = paymentRepository;
-    }
+
+    private final PaypalService paypalService;
+
+    private final PaymentRepository paymentRepository;
 
     @GetMapping("/")
-    public Iterable<PaymentInfo> showAll(){
+    public Iterable<PaymentInfo> showAll() {
         return paymentRepository.findAll();
     }
+
     @GetMapping("/{paymentId}")
-    public PaymentInfo showDetail(@PathVariable("paymentId") Integer paymentId){
+    public PaymentInfo showDetail(@PathVariable("paymentId") Integer paymentId) {
+
         Optional<PaymentInfo> optionalPaymentInfo = paymentRepository.findById(paymentId);
-        if(optionalPaymentInfo.isPresent()){
-            return optionalPaymentInfo.get();
-        }
-        return null;
+        return optionalPaymentInfo.orElse(null);
     }
+
     @GetMapping("/detail/{paypalId}")
     public String detailPayment(@PathVariable("paypalId") String paypalId) throws PayPalRESTException {
+
         return JSONFormatter.toJSON(Payment.get(paypalService.getApiContext(), String.valueOf(paypalId)));
     }
+
     @PostMapping(consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public String pay(HttpServletRequest request,
@@ -81,15 +79,18 @@ public class PaymentController {
         }
         return "redirect:/";
     }
+
     @GetMapping(URL_PAYPAL_CANCEL)
-    public String cancelPay(){
+    public String cancelPay() {
+
         return "cancel";
     }
+
     @GetMapping(URL_PAYPAL_SUCCESS)
     public String successPay(@RequestParam("paymentId") String paymentId,
                              @RequestParam("PayerID") String payerId,
                              @RequestParam("userId") Long userId,
-                             @RequestParam("orderId") Integer orderId){
+                             @RequestParam("orderId") Integer orderId) {
         try {
             //if user order token jj do
             Payment payment = paypalService.executePayment(paymentId, payerId);

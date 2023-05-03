@@ -1,6 +1,6 @@
 package com.example.orderservice.service;
 
-import com.example.orderdatamodel.entity.Order;
+import com.example.orderservice.dto.OrderDTO;
 import com.example.orderservice.payload.request.OrderRequest;
 import com.example.orderservice.payload.response.OrderResponse;
 
@@ -10,7 +10,13 @@ public interface OrderService {
 
     OrderResponse placeOrder(OrderRequest orderRequest, Long userId);
 
-    List<Order> getAllOrder();
+    List<OrderDTO> getAllOrder();
 
-    Order getOrderById(Integer id);
+    OrderDTO getOrderById(Integer id);
+
+    List<OrderDTO> getOrderByCustomer(Long userId);
+
+    void deleteOrder(Integer id);
+
+    void updateOrderStatus(Integer id);
 }

@@ -1,7 +1,7 @@
 package com.example.orderservice.controller;
 
 import com.example.api.controller.BaseController;
-import com.example.orderdatamodel.entity.Order;
+import com.example.orderservice.dto.OrderDTO;
 import com.example.orderservice.payload.request.OrderRequest;
 import com.example.orderservice.payload.response.OrderResponse;
 import com.example.orderservice.service.OrderService;
@@ -30,53 +30,41 @@ public class OrderController extends BaseController {
     }
 
     @GetMapping("/get-all")
-    public ResponseEntity<List<Order>> getAllOrder() {
+    public ResponseEntity<List<OrderDTO>> getAllOrder() {
 
         return ResponseEntity.ok(orderService.getAllOrder());
     }
 
-    @PostMapping("/{orderId}")
-    public ResponseEntity<Order> getOrder(
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderDTO> getOrder(
             @PathVariable Integer orderId
     ) {
 
         return ResponseEntity.ok(orderService.getOrderById(orderId));
     }
 
-    @PostMapping("/getOrderOfCustomer/{customer_id}")
-    public ResponseEntity<List<Order>> getOrderByCustomer(
-            @PathVariable Integer customerId
-    ) {
+    @GetMapping("/get-order-by-user")
+    public ResponseEntity<List<OrderDTO>> getOrderByCustomer() {
 
-        return ResponseEntity.ok(orderServiceImpl.getOrderByCoustomer(customerId));
+        Long userId = getOriginalId();
+        return ResponseEntity.ok(orderService.getOrderByCustomer(userId));
     }
-
 
     @DeleteMapping("/delete/{orderId}")
     public String deleteOrder(
             @PathVariable Integer orderId
     ) {
 
-        orderServiceImpl.deleteOrder(orderId);
+        orderService.deleteOrder(orderId);
         return "Order have been deleted";
     }
 
-    @GetMapping("/cancel/{orderId}")
-    public String cancelOrder(
-            @PathVariable Integer orderId
-    ) {
-
-        orderServiceImpl.cancelOrder(orderId);
-        return "Order have been canceled";
-    }
-
-    @PostMapping("/updateStatus/{orderId}")
+    @PostMapping("/update-status/{orderId}")
     public String updateOrderStatus(
-            @RequestParam("status") String status,
             @PathVariable Integer orderId
     ) {
 
-        orderServiceImpl.updateOrderStatus(status, orderId);
+        orderService.updateOrderStatus(orderId);
         return "Order have been updated";
     }
 }

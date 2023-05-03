@@ -148,7 +148,7 @@ public class BookServiceImpl implements BookService {
         return "success";
     }
 
-    public BookResponse mapToBookResponse(Book book) {
+    private BookResponse mapToBookResponse(Book book) {
 
         List<ImageDTO> dtos = book.getImages().stream()
                 .map(imageService::mapToImageDTO)

@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import com.example.api.exception.NotFoundException;
 import com.example.orderdatamodel.entity.enumtype.OrderStatusEnum;
+import com.example.orderservice.dto.OrderDTO;
+import com.example.orderservice.dto.OrderItemDTO;
 import com.example.orderservice.payload.request.OrderItemRequest;
 import com.example.orderservice.payload.request.OrderRequest;
 import com.example.orderdatamodel.entity.Order;
@@ -20,11 +22,13 @@ import com.example.orderservice.repository.OrderRepository;
 import com.example.orderservice.service.OrderService;
 import com.example.proxycommon.ebook.payload.response.BookResponse;
 import com.example.proxycommon.ebook.proxy.EbookServiceProxy;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
@@ -32,41 +36,50 @@ public class OrderServiceImpl implements OrderService {
     private final OrderItemRepository orderItemRepo;
     private final EbookServiceProxy ebookServiceProxy;
 
-    public void updateOrderStatus(String status, Integer id) {
-        Order order = orderRepository.findById(id).get();
-        order.setStatus(status);
-        orderRepository.save(order);
+    @Override
+    public void updateOrderStatus(Integer id) {
+
+        Order order = orderRepo.findById(id).orElseThrow(
+                () -> new NotFoundException(
+                        String.format("updateOrderStatus error: Not found Order with id: %s", id)
+                )
+        );
+
+        order.setStatus(OrderStatusEnum.ACTIVE);
+        orderRepo.save(order);
     }
 
     @Override
-    public Order getOrderById(Integer id) {
+    public OrderDTO getOrderById(Integer id) {
 
-        return orderRepo.findById(id).orElseThrow(
+        return mapToOrderDto(orderRepo.findById(id).orElseThrow(
                 () -> new NotFoundException(
                         String.format("getOrderById error: Not found Order with id: %s", id)
                 )
-        );
-    }
-
-    public List<Order> getOrderByCoustomer(Integer customerId) {
-        return orderRepository.findByCustomer_id(customerId);
+        ));
     }
 
     @Override
-    public List<Order> getAllOrder() {
+    public List<OrderDTO> getOrderByCustomer(Long customerId) {
 
-        return orderRepo.findAll();
+        return orderRepo.findByUserId(customerId).stream()
+                .map(this::mapToOrderDto)
+                .collect(Collectors.toList());
     }
 
-    public void cancelOrder(Integer id) {
-        // call cartService to re-add listOrderItem to cart
-        // delete order
-        orderRepository.deleteById(id);
+    @Override
+    public List<OrderDTO> getAllOrder() {
+
+        return orderRepo.findAll().stream()
+                .map(this::mapToOrderDto)
+                .collect(Collectors.toList());
     }
 
+    @Override
     public void deleteOrder(Integer id) {
-        if(orderRepository.existsById(id)) {
-            orderRepository.deleteById(id);
+
+        if(orderRepo.existsById(id)) {
+            orderRepo.deleteById(id);
         } else {
             throw new RuntimeException("Order not found");
         }
@@ -81,6 +94,7 @@ public class OrderServiceImpl implements OrderService {
                 .map(p -> {
                     BookResponse bookResponse = getBookById(p.getBookId());
                     bookMap.put(p.getBookId(), bookResponse);
+                    assert bookResponse != null;
                     subTotal[0] += bookResponse.getPrice() * p.getQuantity();
 
                     return OrderItem.builder()
@@ -119,39 +133,23 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
-    private Order setOrderDetail(OrderRequest orderRequest) {
+    private OrderDTO mapToOrderDto(Order order) {
 
-        Order order = new Order();
-
-        List<OrderItem> orderItems = orderRequest.getListOrderItemDTO()
-            .stream()
-            .map(this::mapToDto)
-            .collect(Collectors.toList());
-
-        order.setOrderItems(orderItems);
-        // set user_id for order
-        // set note
-        order.setNote(orderRequest.getNote());
-        // set status
-        order.setStatus("Watting for payment");
-        // set sub_total
-        float sub_total = 0;
-        for (OrderItem orderItem : orderItems) {
-           sub_total += orderItem.getPrice() * orderItem.getQuantity();
-        }
-        order.setSubTotal(sub_total);
-
-        return order;
-    }
-
-    private OrderItem mapToDto(OrderItemRequest orderItemDto) {
-        OrderItem orderItem = new OrderItem();
-
-        orderItem.setPrice(orderItemDto.getPrice());
-        orderItem.setBookId(orderItemDto.getBookId());
-        orderItem.setQuantity(orderItemDto.getQuantity());
-
-        return orderItem;
+        return OrderDTO.builder()
+                .id(order.getId())
+                .note(order.getNote())
+                .userId(order.getUserId())
+                .subTotal(order.getSubTotal())
+                .status(order.getStatus().name())
+                .orderItems(order.getOrderItems().stream()
+                        .map(p -> OrderItemDTO.builder()
+                                .id(p.getId())
+                                .price(p.getPrice())
+                                .quantity(p.getQuantity())
+                                .bookId(p.getBookId())
+                                .build())
+                        .collect(Collectors.toList()))
+                .build();
     }
 
     private BookResponse getBookById(Integer bookId) {

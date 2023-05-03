@@ -1,6 +1,5 @@
 package com.example.orderservice.dto;
 
-import com.example.orderservice.payload.request.OrderItemRequest;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,5 +19,5 @@ public class OrderDTO {
 
     private Long userId;
 
-    private List<OrderItemRequest> orderItems;
+    private List<OrderItemDTO> orderItems;
 }
