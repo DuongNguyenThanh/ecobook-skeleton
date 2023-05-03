@@ -17,6 +17,7 @@
 	<properties>
 		<data.model.version>1.0.0</data.model.version>
 		<common.lib.version>1.0.0</common.lib.version>
+		<feign.gson.version>9.4.0</feign.gson.version>
 	</properties>
 
 	<dependencies>
@@ -49,7 +50,7 @@
 		<dependency>
 			<groupId>io.github.openfeign</groupId>
 			<artifactId>feign-gson</artifactId>
-			<version>9.4.0</version>
+			<version>${feign.gson.version}</version>
 		</dependency>
 
 		<dependency>

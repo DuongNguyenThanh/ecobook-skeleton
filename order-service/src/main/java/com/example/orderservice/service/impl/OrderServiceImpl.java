@@ -45,7 +45,7 @@ public class OrderServiceImpl implements OrderService {
                 )
         );
 
-        order.setStatus(OrderStatusEnum.ACTIVE);
+        order.setStatus(OrderStatusEnum.DONE);
         orderRepo.save(order);
     }
 
@@ -141,14 +141,6 @@ public class OrderServiceImpl implements OrderService {
                 .userId(order.getUserId())
                 .subTotal(order.getSubTotal())
                 .status(order.getStatus().name())
-                .orderItems(order.getOrderItems().stream()
-                        .map(p -> OrderItemDTO.builder()
-                                .id(p.getId())
-                                .price(p.getPrice())
-                                .quantity(p.getQuantity())
-                                .bookId(p.getBookId())
-                                .build())
-                        .collect(Collectors.toList()))
                 .build();
     }
 
