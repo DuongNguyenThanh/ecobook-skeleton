@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 @Table(name = "payment_info")
-public class PaymentInfo extends BaseModel {
+public class PaymentInfo extends Auditable<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
