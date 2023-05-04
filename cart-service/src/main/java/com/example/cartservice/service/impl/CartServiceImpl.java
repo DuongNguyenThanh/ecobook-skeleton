@@ -57,7 +57,7 @@ public class CartServiceImpl implements CartService {
                     .build();
         }
 
-        return null;
+        return new CartResponse();
     }
 
     @Override
