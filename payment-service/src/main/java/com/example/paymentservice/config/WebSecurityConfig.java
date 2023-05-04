@@ -1,4 +1,4 @@
-package com.example.paymentservice.config.web;
+package com.example.paymentservice.config;
 
 import com.example.api.filter.AuthTokenFilter;
 import com.example.api.jwt.AuthEntryPointJwt;
