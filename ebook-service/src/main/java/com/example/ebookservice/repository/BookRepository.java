@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Integer> {
 
-    Page<Book> findByNameContaining(String keyword, Pageable pageable);
+    List<Book> findByNameContaining(String keyword);
 
     @Query(nativeQuery = true,
             value = "SELECT b.* FROM book b WHERE b.category_id = :cateId")
