@@ -13,7 +13,7 @@ public interface BookService {
 
     BookResponse getBookById(Integer bookId);
 
-    List<BookResponse> getBooksByCategory(Integer cateId);
+    GeneralPageResponse<BookResponse> getBooksByCategory(Integer cateId, Pageable pageable);
 
     List<BookResponse> searchBook(String key, Float from, Float to);
 

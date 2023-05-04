@@ -71,15 +71,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookResponse> getBooksByCategory(Integer cateId) {
+    public GeneralPageResponse<BookResponse> getBooksByCategory(Integer cateId, Pageable pageable) {
 
-        List<Book> books = bookRepo.findAllByCategoryId(cateId);
-        if(!books.isEmpty()) {
-            return books.stream()
-                    .map(this::mapToBookResponse)
-                    .collect(Collectors.toList());
-        }
-        return null;
+        Page<Book> books = bookRepo.findAllByCategoryId(cateId, pageable);
+        List<BookResponse> contents = books.stream()
+                .map(this::mapToBookResponse)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        return GeneralPageResponse.toResponse(
+                new PageImpl<>(
+                        contents,
+                        pageable,
+                        books.getTotalElements()
+                ));
     }
 
     @Override

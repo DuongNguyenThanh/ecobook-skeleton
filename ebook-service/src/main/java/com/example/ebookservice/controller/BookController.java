@@ -35,11 +35,12 @@ public class BookController {
     }
 
     @GetMapping("/book-cate")
-    public ResponseEntity<List<BookResponse>> getBooksByCategory(
-            @RequestParam(name = "cate-id") Integer cateId
+    public ResponseEntity<GeneralPageResponse<BookResponse>> getBooksByCategory(
+            @RequestParam(name = "cate-id") Integer cateId,
+            Pageable pageable
     ) {
 
-        return ResponseEntity.ok(bookService.getBooksByCategory(cateId));
+        return ResponseEntity.ok(bookService.getBooksByCategory(cateId, pageable));
     }
 
     @GetMapping("/search")
