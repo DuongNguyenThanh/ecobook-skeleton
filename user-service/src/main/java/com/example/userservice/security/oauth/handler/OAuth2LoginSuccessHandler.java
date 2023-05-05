@@ -99,8 +99,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             HttpEntity<UserToken> entity = new HttpEntity<>(token, headers);
-            String url = "http://localhost:8009/api/user/sign-in/oauth";
-            ResponseEntity<String> us = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+            String url = "http://localhost:8009/user/sign-in/oauth";
+            restTemplate.exchange(url, HttpMethod.POST, entity, Void.class);
 
             response.sendRedirect("/api/user/oauth2/success/");
             super.onAuthenticationSuccess(request, response, authentication);
