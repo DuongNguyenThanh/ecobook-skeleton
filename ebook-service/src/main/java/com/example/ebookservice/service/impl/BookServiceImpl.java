@@ -1,6 +1,7 @@
 package com.example.ebookservice.service.impl;
 
 import com.example.api.exception.NotFoundException;
+import com.example.api.model.GeneralPageResponse;
 import com.example.ebookdatamodel.entity.Book;
 import com.example.ebookdatamodel.entity.Category;
 import com.example.ebookdatamodel.entity.Image;
@@ -16,6 +17,9 @@ import com.example.ebookservice.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,11 +38,20 @@ public class BookServiceImpl implements BookService {
     private final CategoryService categoryService;
 
     @Override
-    public List<BookResponse> getAllBooks() {
-        return bookRepo.findAll().stream()
+    public GeneralPageResponse<BookResponse> getAllBooks(Pageable pageable) {
+
+        Page<Book> books = bookRepo.findAll(pageable);
+        List<BookResponse> contents = books.stream()
                 .map(this::mapToBookResponse)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+
+        return GeneralPageResponse.toResponse(
+                new PageImpl<>(
+                        contents,
+                        pageable,
+                        books.getTotalElements()
+                ));
     }
 
     @Override
@@ -58,15 +71,20 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookResponse> getBooksByCategory(Integer cateId) {
+    public GeneralPageResponse<BookResponse> getBooksByCategory(Integer cateId, Pageable pageable) {
 
-        List<Book> books = bookRepo.findAllByCategoryId(cateId);
-        if(!books.isEmpty()) {
-            return books.stream()
-                    .map(this::mapToBookResponse)
-                    .collect(Collectors.toList());
-        }
-        return null;
+        Page<Book> books = bookRepo.findAllByCategoryId(cateId, pageable);
+        List<BookResponse> contents = books.stream()
+                .map(this::mapToBookResponse)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+
+        return GeneralPageResponse.toResponse(
+                new PageImpl<>(
+                        contents,
+                        pageable,
+                        books.getTotalElements()
+                ));
     }
 
     @Override

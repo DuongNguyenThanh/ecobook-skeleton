@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @Builder
 @Table(name = "refresh_token")
-public class RefreshToken extends BaseModel {
+public class RefreshToken extends Auditable<String> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

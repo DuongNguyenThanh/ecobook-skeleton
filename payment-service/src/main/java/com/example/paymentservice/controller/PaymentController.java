@@ -56,8 +56,8 @@ public class PaymentController {
     public String pay(HttpServletRequest request,
                       @RequestBody PaymentRequest pr
     ) {
-        String cancelUrl = Utils.getBaseURL(request) + "/api/payment" + URL_PAYPAL_CANCEL;
-        String successUrl = Utils.getBaseURL(request) + "/api/payment" + URL_PAYPAL_SUCCESS + "?userId=" +
+        String cancelUrl = "http://localhost:8009/payment" + URL_PAYPAL_CANCEL;
+        String successUrl = "http://localhost:8009/payment" + URL_PAYPAL_SUCCESS + "?userId=" +
                 pr.getUserId()+"&orderId="+pr.getOrderId();
         try {
             Payment payment = paypalService.createPayment(

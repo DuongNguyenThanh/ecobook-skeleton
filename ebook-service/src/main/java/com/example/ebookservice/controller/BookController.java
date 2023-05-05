@@ -1,14 +1,15 @@
 package com.example.ebookservice.controller;
 
+import com.example.api.model.GeneralPageResponse;
 import com.example.ebookservice.payload.request.BookRequest;
 import com.example.ebookservice.payload.response.BookResponse;
 import com.example.ebookservice.service.BookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @Slf4j
@@ -20,9 +21,9 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping("/all-book")
-    public ResponseEntity<List<BookResponse>> getAll(){
+    public ResponseEntity<GeneralPageResponse<BookResponse>> getAll(Pageable pageable){
 
-        return ResponseEntity.ok(bookService.getAllBooks());
+        return ResponseEntity.ok(bookService.getAllBooks(pageable));
     }
 
     @GetMapping("/{bookId}")
@@ -34,11 +35,12 @@ public class BookController {
     }
 
     @GetMapping("/book-cate")
-    public ResponseEntity<List<BookResponse>> getBooksByCategory(
-            @RequestParam(name = "cate-id") Integer cateId
+    public ResponseEntity<GeneralPageResponse<BookResponse>> getBooksByCategory(
+            @RequestParam(name = "cate-id") Integer cateId,
+            Pageable pageable
     ) {
 
-        return ResponseEntity.ok(bookService.getBooksByCategory(cateId));
+        return ResponseEntity.ok(bookService.getBooksByCategory(cateId, pageable));
     }
 
     @GetMapping("/search")
