@@ -7,7 +7,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.api.exception.ForbiddenException;
 import com.example.api.exception.NotFoundException;
 import com.example.security.common.JwtTokenCommon;
-import com.example.security.model.UserAccountInfo;
 import com.example.security.model.UserPrincipal;
 import com.example.security.payload.UserToken;
 import com.example.userdatamodel.entity.UserAccount;
@@ -142,22 +141,6 @@ public class UserServiceImpl implements UserService {
         } else {
             log.info("Phone number exists");
         }
-    }
-
-    @Override
-    public ResponseEntity<?> genOauthToken(String username, Long userId, String name) {
-
-        UserPrincipal principal = UserPrincipal.build(
-                UserAccountInfo.builder()
-                        .userId(userId)
-                        .username(username)
-                        .roles(Collections.singletonList(AccountRoleEnum.ROLE_USER.name()))
-                        .build()
-        );
-        UserToken token = genTokenInfo(principal);
-        token.setFirstName(name);
-
-        return ResponseEntity.ok(token);
     }
 
     private UserToken genTokenInfo(UserPrincipal principal) {

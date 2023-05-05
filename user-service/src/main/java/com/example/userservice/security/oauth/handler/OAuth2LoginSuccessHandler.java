@@ -1,5 +1,9 @@
 package com.example.userservice.security.oauth.handler;
 
+import com.example.security.common.JwtTokenCommon;
+import com.example.security.model.UserAccountInfo;
+import com.example.security.model.UserPrincipal;
+import com.example.security.payload.UserToken;
 import com.example.userdatamodel.entity.UserAccount;
 import com.example.userdatamodel.entity.enumtype.AccountRoleEnum;
 import com.example.userdatamodel.entity.enumtype.AuthProviderEnum;
@@ -8,19 +12,19 @@ import com.example.userservice.security.oauth.model.CustomOAuth2User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -30,6 +34,8 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
     private final UserAccountRepository userAccountRepo;
     private final PasswordEncoder passwordEncoder;
+    private final RestTemplate restTemplate = new RestTemplate();
+    private final JwtTokenCommon jwtTokenCommon;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
@@ -67,7 +73,36 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
             }
 
-            response.sendRedirect(request.getContextPath() + "/api/user/oauth2/success/" + username + "/" + account.getId() + "/"+ oauthUser.getName());
+            UserPrincipal userDetails = UserPrincipal.builder()
+                    .user(UserAccountInfo.builder()
+                            .userId(account.getId())
+                            .username(account.getUsername())
+                            .build())
+                    .authorities(oauthUser.getAuthorities())
+                    .build();
+
+            String accessToken = jwtTokenCommon.generateJwtToken(userDetails);
+            String refreshToken = jwtTokenCommon.generateJwtRefreshToken(userDetails);
+
+            Set<String> roles = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toSet());
+
+            UserToken token = UserToken.builder()
+                    .accountId(userDetails.getId())
+                    .accessToken(accessToken)
+                    .refreshToken(refreshToken)
+                    .listRole(roles)
+                    .firstName(userDetails.getFirstName())
+                    .lastName(userDetails.getLastName())
+                    .build();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<UserToken> entity = new HttpEntity<>(token, headers);
+            String url = "http://localhost:8009/api/user/sign-in/oauth";
+            ResponseEntity<String> us = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
+
+            response.sendRedirect("/api/user/oauth2/success/");
             super.onAuthenticationSuccess(request, response, authentication);
         }
     }

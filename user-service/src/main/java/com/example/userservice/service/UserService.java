@@ -19,7 +19,5 @@ public interface UserService {
 
     void resetPassword(ResetPasswordRequest request);
 
-    ResponseEntity<?> genOauthToken(String username, Long userId, String name);
-
     ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response);
 }

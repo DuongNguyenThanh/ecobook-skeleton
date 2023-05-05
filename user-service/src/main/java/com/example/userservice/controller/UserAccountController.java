@@ -38,14 +38,10 @@ public class UserAccountController extends BaseController {
         return userService.login(request);
     }
 
-    @GetMapping("/oauth2/success/{username}/{userId}/{name}")
-    public ResponseEntity<?> oauthSuccess(
-            @PathVariable("username") String username,
-            @PathVariable("userId") Long userId,
-            @PathVariable("name") String name
-    ) {
+    @GetMapping("/oauth2/success")
+    public ResponseEntity<?> oauthSuccess() {
 
-        return ResponseEntity.ok(userService.genOauthToken(username, userId, name));
+        return ResponseEntity.ok("Login oauth success");
     }
 
     @PostMapping("/register")
