@@ -20,7 +20,7 @@ public interface UserService {
 
     void resetPassword(ResetPasswordRequest request);
 
-    UserToken genOauthToken(String username, Long userId, String name);
+    UserToken genOauthToken(Long userId);
 
     ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response);
 }

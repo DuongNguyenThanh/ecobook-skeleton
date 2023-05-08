@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
@@ -42,14 +41,12 @@ public class UserAccountController extends BaseController {
         return userService.login(request);
     }
 
-    @GetMapping("/oauth2/success/{username}/{userId}/{name}")
+    @GetMapping("/oauth2/success/{userId}")
     public ResponseEntity<?> oauthSuccess(
-            @PathVariable("username") String username,
-            @PathVariable("userId") Long userId,
-            @PathVariable("name") String name
+            @PathVariable("userId") Long userId
     ) {
 
-        UserToken userToken = userService.genOauthToken(username, userId, name);
+        UserToken userToken = userService.genOauthToken(userId);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<UserToken> entity = new HttpEntity<>(userToken, headers);
