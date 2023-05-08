@@ -1,5 +1,6 @@
 package com.example.userservice.service;
 
+import com.example.security.payload.UserToken;
 import com.example.userservice.payload.request.LoginRequest;
 import com.example.userservice.payload.request.RegisterRequest;
 import com.example.userservice.payload.request.ResetPasswordRequest;
@@ -18,6 +19,8 @@ public interface UserService {
     RegisterResponse addUser(RegisterRequest request);
 
     void resetPassword(ResetPasswordRequest request);
+
+    UserToken genOauthToken(String username, Long userId, String name);
 
     ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response);
 }
