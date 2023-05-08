@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
 
@@ -39,9 +40,9 @@ public class UserAccountController extends BaseController {
     }
 
     @GetMapping("/oauth2/success")
-    public ResponseEntity<?> oauthSuccess() {
+    public RedirectView oauthSuccess() {
 
-        return ResponseEntity.ok("Login oauth success");
+        return new RedirectView("http://localhost:8009/ecobook/");
     }
 
     @PostMapping("/register")
