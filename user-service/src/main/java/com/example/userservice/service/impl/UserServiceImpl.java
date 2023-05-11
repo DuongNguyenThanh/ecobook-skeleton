@@ -145,19 +145,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<?> genOauthToken(String username, Long userId, String name) {
+    public UserToken genOauthToken(Long userId) {
+
+        UserAccount account = userAccountRepo.findById(userId).orElseThrow(
+                () -> new NotFoundException(
+                        String.format("genOauthToken error: Not found User Account with id: %s", userId)
+                )
+        );
 
         UserPrincipal principal = UserPrincipal.build(
                 UserAccountInfo.builder()
                         .userId(userId)
-                        .username(username)
+                        .username(account.getUsername())
                         .roles(Collections.singletonList(AccountRoleEnum.ROLE_USER.name()))
                         .build()
         );
         UserToken token = genTokenInfo(principal);
-        token.setFirstName(name);
+        token.setFirstName(account.getFName());
 
-        return ResponseEntity.ok(token);
+        return token;
     }
 
     private UserToken genTokenInfo(UserPrincipal principal) {

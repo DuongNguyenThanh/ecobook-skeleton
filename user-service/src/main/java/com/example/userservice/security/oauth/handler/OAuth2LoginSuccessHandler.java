@@ -67,7 +67,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
 
             }
 
-            response.sendRedirect(request.getContextPath() + "/api/user/oauth2/success/" + username + "/" + account.getId() + "/"+ oauthUser.getName());
+            response.sendRedirect(request.getContextPath() + "/api/user/oauth2/success/" + account.getId());
             super.onAuthenticationSuccess(request, response, authentication);
         }
     }

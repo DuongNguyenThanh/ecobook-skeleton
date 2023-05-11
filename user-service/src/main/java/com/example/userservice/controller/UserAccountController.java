@@ -1,6 +1,7 @@
 package com.example.userservice.controller;
 
 import com.example.api.controller.BaseController;
+import com.example.security.payload.UserToken;
 import com.example.userservice.payload.request.LoginRequest;
 import com.example.userservice.payload.request.RegisterRequest;
 import com.example.userservice.payload.request.ResetPasswordRequest;
@@ -8,8 +9,9 @@ import com.example.userservice.payload.response.RegisterResponse;
 import com.example.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
 
@@ -21,6 +23,7 @@ import javax.validation.Valid;
 public class UserAccountController extends BaseController {
 
     private final UserService userService;
+    private final RestTemplate restTemplate = new RestTemplate();
 
     @GetMapping("/hello")
     ResponseEntity<?> helloWorld() {
@@ -38,14 +41,17 @@ public class UserAccountController extends BaseController {
         return userService.login(request);
     }
 
-    @GetMapping("/oauth2/success/{username}/{userId}/{name}")
+    @GetMapping("/oauth2/success/{userId}")
     public ResponseEntity<?> oauthSuccess(
-            @PathVariable("username") String username,
-            @PathVariable("userId") Long userId,
-            @PathVariable("name") String name
+            @PathVariable("userId") Long userId
     ) {
 
-        return ResponseEntity.ok(userService.genOauthToken(username, userId, name));
+        UserToken userToken = userService.genOauthToken(userId);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<UserToken> entity = new HttpEntity<>(userToken, headers);
+        String url = "http://localhost:8009/user/sign-in/oauth";
+        return restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
     }
 
     @PostMapping("/register")
